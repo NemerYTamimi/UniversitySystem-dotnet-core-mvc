@@ -1,0 +1,66 @@
+﻿@model UniversitySystem.Models.ViewModels.RegisterViewModel
+
+<form method="post" asp-action="Register" asp-controller="Account">
+
+    <div class="illustration"><i class="icon ion-ios-personadd-outline"></i></div>
+    <div class="text-center">
+        @if (User.IsInRole(UniversitySystem.Utility.Helper.Admin))
+        {
+            <h4>Register an admin account</h4>
+        }
+        else
+        {
+            <h4>Create a new account</h4>
+        }
+    </div>
+    <hr />
+    <div asp-validation-summary="None" class="text-danger"></div>
+    <div class="form-group row">
+        <div class=" col-md-12">
+            <input asp-for="Name" class="form-control" placeholder="Name" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class=" col-md-12">
+            <input asp-for="Email" class="form-control" placeholder="Email" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class=" col-md-12">
+            <input asp-for="Password" class="form-control" placeholder="Password" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class=" col-md-12">
+            <input asp-for="ConfirmPassword" class="form-control" placeholder="Confirm Password" />
+            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class=" col-md-12">
+            <select asp-for="RoleName"
+                    asp-items="@UniversitySystem.Utility.Helper.GetRolesForDropDown(User.IsInRole(UniversitySystem.Utility.Helper.Admin))"
+                    class="form-control">
+                <option disabled selected> -- Role Name -- </option>
+
+            </select>
+            <span asp-validation-for="RoleName" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="">
+            <input type="submit" value="Register" class="btn btn-success btn-lg btn-block" />
+        </div>
+    </div>
+    <p class="">
+        <a asp-action="Login">Sign In</a>
+    </p>
+</form>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+
+}
