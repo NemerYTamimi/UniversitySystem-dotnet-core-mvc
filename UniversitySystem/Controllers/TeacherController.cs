@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using UniversitySystem.Models.ViewModels;
+using System.Threading.Tasks;
 
 namespace UniversitySystem.Controllers
 {
@@ -25,7 +26,7 @@ namespace UniversitySystem.Controllers
         }
 
         // GET: /Teacher/
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
             if (User.IsInRole(Utility.Helper.Admin))
             {
@@ -35,14 +36,14 @@ namespace UniversitySystem.Controllers
                     Email = teacher.TeacherEmail,
                     DesignationName = teacher.Designation.Name,
                     Name = teacher.Name
-                }) ;
+                });
                 return View(teachers.ToList());
             }
             return RedirectToAction("Index", "Portal");
         }
 
         // GET: /Teacher/Details/5
-        public ActionResult Details(int? id)
+        public async Task<ActionResult> Details(int? id)
         {
             if (User.IsInRole(Utility.Helper.Admin))
             {
@@ -61,7 +62,7 @@ namespace UniversitySystem.Controllers
         }
 
         // GET: /Teacher/Create
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
             if (User.IsInRole(Utility.Helper.Admin))
             {
@@ -75,14 +76,14 @@ namespace UniversitySystem.Controllers
         // POST: /Teacher/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Teacher teacher)
+        public async Task<ActionResult> Create(Teacher teacher)
         {
             if (User.IsInRole(Utility.Helper.Admin))
             {
                 if (ModelState.IsValid)
                 {
                     _db.Teachers.Add(teacher);
-                    _db.SaveChanges();
+                    await _db.SaveChangesAsync();
                     ViewBag.Message = "Teacher Saved Successfully";
                     // return RedirectToAction("Index");
                 }
@@ -99,7 +100,7 @@ namespace UniversitySystem.Controllers
         }
 
         // GET: /Teacher/Edit/5
-        public ActionResult Edit(int? id)
+        public async Task<ActionResult> Edit(int? id)
         {
             if (User.IsInRole(Utility.Helper.Admin))
             {
@@ -122,14 +123,14 @@ namespace UniversitySystem.Controllers
         // POST: /Teacher/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(Teacher teacher)
+        public async Task<ActionResult> Edit(Teacher teacher)
         {
             if (User.IsInRole(Utility.Helper.Admin))
             {
                 if (ModelState.IsValid)
                 {
                     _db.Entry(teacher).State = EntityState.Modified;
-                    _db.SaveChanges();
+                    await _db.SaveChangesAsync();
                     return RedirectToAction("Index");
                 }
                 ViewBag.DepartmentId = new SelectList(_db.Departments, "Id", "DeptCode", teacher.DepartmentId);
@@ -141,7 +142,7 @@ namespace UniversitySystem.Controllers
         }
 
         // GET: /Teacher/Delete/5
-        public ActionResult Delete(int? id)
+        public async Task<ActionResult> Delete(int? id)
         {
             if (User.IsInRole(Utility.Helper.Admin))
             {
@@ -163,13 +164,13 @@ namespace UniversitySystem.Controllers
         // POST: /Teacher/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
             if (User.IsInRole(Utility.Helper.Admin))
             {
                 Teacher teacher = _db.Teachers.Find(id);
                 _db.Teachers.Remove(teacher);
-                _db.SaveChanges();
+                await _db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
             return RedirectToAction("Index", "Portal");

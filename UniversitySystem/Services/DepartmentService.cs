@@ -39,5 +39,16 @@ namespace UniversitySystem.Services
             }
             return "Failed to create the department, you enter an empty data";
         }
+
+        public string EditDepartment(Department department)
+        {
+            if (department != null)
+            {
+                _db.Entry(department);
+                _db.SaveChanges();
+                return $"Department Successfully edited with code = {department.DeptCode}";
+            }
+            return "Failed to create the department, you enter an empty data";
+        }
     }
 }

@@ -1,9 +1,12 @@
-﻿using UniversitySystem.Models;
-using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using UniversitySystem.Models;
 using UniversitySystem.Models.ViewModels;
 
 namespace UniversitySystem.Controllers
@@ -24,11 +27,11 @@ namespace UniversitySystem.Controllers
             _signInManager = signInManager;
         }
         // GET: /Student/
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
             if (User.IsInRole(Utility.Helper.Admin))
             {
-                var students = _db.Students.Include(s => s.Department).Select(student => new StudentVM()
+                var students = _db.Students.Include(s => s.Department).Where(student => student.Status == true).Select(student => new StudentVM()
                 {
                     Id = student.Id,
                     Name = student.Name,
@@ -40,7 +43,7 @@ namespace UniversitySystem.Controllers
         }
 
         // GET: /Student/Details/5
-        public ActionResult Details(int? id)
+        public async Task<ActionResult> Details(int? id)
         {
             if (User.IsInRole(Utility.Helper.Admin))
             {
@@ -60,7 +63,7 @@ namespace UniversitySystem.Controllers
         }
 
         // GET: /Student/Create
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
             if (User.IsInRole(Utility.Helper.Admin))
             {
@@ -73,25 +76,24 @@ namespace UniversitySystem.Controllers
         // POST: /Student/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Student student)
+        public async Task<ActionResult> Create(Student student)
         {
             if (User.IsInRole(Utility.Helper.Admin))
             {
                 if (ModelState.IsValid)
                 {
-                    student.StudentRegNo = GetStudentRegNo(student);
+                    student.StudentRegNo = await GetStudentRegNo(student);
+                    student.Status = true;
                     _db.Students.Add(student);
-                    _db.SaveChanges();
+                    await _db.SaveChangesAsync();
                     ViewBag.Message = "Student Registered Successfully";
                 }
-
                 ViewBag.DepartmentId = new SelectList(_db.Departments, "Id", "DeptCode", student.DepartmentId);
                 return RedirectToAction("Index");
             }
             return RedirectToAction("Index", "Portal");
-
         }
-        public string GetStudentRegNo(Student aStudent)
+        public async Task<string> GetStudentRegNo(Student aStudent)
         {
             var count = _db.Students.Count(m => (m.DepartmentId == aStudent.DepartmentId) && (m.Date.Year == aStudent.Date.Year)) + 1;
 
@@ -99,14 +101,12 @@ namespace UniversitySystem.Controllers
 
             /* if regNumber = 10 will be converted to 4 digits = 0010 */
             string leadingZero = "";
-            int length = 3 - count.ToString().Length;
+            int length = 4 - count.ToString().Length;
             for (int i = 0; i < length; i++)
             {
                 leadingZero += "0";
             }
-
             string studentRegNo = aDepartment.DeptCode + "-" + aStudent.Date.Year + "-" + leadingZero + count;
-
             return studentRegNo;
         }
 
@@ -117,7 +117,7 @@ namespace UniversitySystem.Controllers
         }
 
         // GET: /Student/Edit/5
-        public ActionResult Edit(int? id)
+        public async Task<ActionResult> Edit(int? id)
         {
             if (User.IsInRole(Utility.Helper.Admin))
             {
@@ -139,25 +139,24 @@ namespace UniversitySystem.Controllers
         // POST: /Student/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(Student student)
+        public async Task<ActionResult> Edit(Student student)
         {
             if (User.IsInRole(Utility.Helper.Admin))
             {
                 if (ModelState.IsValid)
                 {
                     _db.Entry(student).State = EntityState.Modified;
-                    _db.SaveChanges();
+                    await _db.SaveChangesAsync();
                     return RedirectToAction("Index");
                 }
                 ViewBag.DepartmentId = new SelectList(_db.Departments, "Id", "DeptCode", student.DepartmentId);
                 return View(student);
             }
             return RedirectToAction("Index", "Portal");
-
         }
 
         // GET: /Student/Delete/5
-        public ActionResult Delete(int? id)
+        public async Task<ActionResult> Delete(int? id)
         {
             if (User.IsInRole(Utility.Helper.Admin))
             {
@@ -185,13 +184,13 @@ namespace UniversitySystem.Controllers
         // POST: /Student/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
             if (User.IsInRole(Utility.Helper.Admin))
             {
                 Student student = _db.Students.Find(id);
-                _db.Students.Remove(student);
-                _db.SaveChanges();
+                student.Status = false;
+                await _db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
             return RedirectToAction("Index", "Portal");

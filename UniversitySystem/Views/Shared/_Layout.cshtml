@@ -13,11 +13,12 @@
     <link rel="stylesheet" href="~/css/login.min.css?h=12b5a9d0e2538c29ab30791a4730670e">
     <link rel="stylesheet" href="~/css/navbar.min.css?h=12b5a9d0e2538c29ab30791a4730670e">
 </head>
-<body class="login-dark text-white">
+<body class="text-white">
     <!-- Start: Navigation with Button -->
     <nav class="navbar navbar-dark navbar-expand-md navigation-clean-button">
         <div class="container">
-            <a class="navbar-brand text-white" href="#">@ViewData["CompanyName"]</a>
+            @*<a class="navbar-brand text-white" href="#">@ViewData["CompanyName"]</a>*@
+            <a class="navbar-brand text-white" asp-controller="Home" asp-action="Index">Demo University</a>
             <button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1">
                 <span class="visually-hidden">Toggle navigation</span>
                 <span class="navbar-toggler-icon"></span>
@@ -25,12 +26,12 @@
             <div class="collapse navbar-collapse" id="navcol-1">
                 <ul class="navbar-nav me-auto">
                 </ul>
-                <partial name="_LoginPartial"/>
+                <partial name="_LoginPartial" />
             </div>
         </div>
     </nav>
     <!-- End: Navigation with Button -->
-    <div class="container">
+    <div class="login-dark">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>

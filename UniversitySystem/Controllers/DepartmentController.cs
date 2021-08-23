@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,13 +30,20 @@ namespace UniversitySystem.Controllers
         }
 
         [HttpGet]
-        public ActionResult Create()
+        public  async Task<ActionResult> Create()
         {
             return View();
         }
 
+        // GET: Department/Details/5
+        public  async Task<ActionResult> Details(int id)
+        {
+            var departments =  _db.Departments.FindAsync(id);
+            return View(departments);
+        }
+
         [HttpPost]
-        public ActionResult Create(Department department)
+        public  async Task<ActionResult> Create(Department department)
         {
             try
             {
@@ -50,9 +58,8 @@ namespace UniversitySystem.Controllers
             }
         }
 
-        public ActionResult Index()
+        public  async Task<ActionResult> Index()
         {
-
             IEnumerable<Department> departments = _departmentService.GetAllDepartment();
             ViewBag.DepartmentList = departments;
             return View();
@@ -72,7 +79,6 @@ namespace UniversitySystem.Controllers
         public JsonResult IsDeptNameExists(string name)
         {
             bool isDeptNameExists = _departmentService.IsDepartmentNameExist(name);
-
             if (isDeptNameExists)
                 return Json(false, new Newtonsoft.Json.JsonSerializerSettings());
             else
@@ -81,6 +87,84 @@ namespace UniversitySystem.Controllers
 
             }
         }
+        // GET: Department/Edit/5
+        public  async Task<ActionResult> Edit(int? id)
+        {
+            if (User.IsInRole(Utility.Helper.Admin))
+            {
+                if (id == null)
+                {
+                    return BadRequest();
+                }
+                Department department = await _db.Departments.FindAsync(id);
+                if (department == null)
+                {
+                    return NotFound();
+                }
+                return View(department);
+            }
+            return RedirectToAction("Index", "Portal");
+        }
 
+        // POST: Department/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public  async Task<ActionResult> Edit(Department Department)
+        {
+            if (User.IsInRole(Utility.Helper.Admin))
+            {
+                if (ModelState.IsValid)
+                {
+                    _db.Entry(Department).State = EntityState.Modified;
+                     await _db.SaveChangesAsync();
+                    return RedirectToAction("Index");
+                }
+                return View(Department);
+            }
+            return RedirectToAction("Index", "Portal");
+        }
+
+        // GET: Department/Delete/5
+        public  async Task<ActionResult> Delete(int? id)
+        {
+            if (User.IsInRole(Utility.Helper.Admin))
+            {
+                if (id == null)
+                {
+                    return BadRequest();
+                }
+                Department Department = await _db.Departments.FindAsync(id);
+                if (Department != null)
+                {
+                    return View(Department);
+                }
+                return NotFound();
+            }
+            return RedirectToAction("Index", "Portal");
+        }
+
+        // POST: Department/Delete/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public  async Task<ActionResult> Delete(int id)
+        {
+            if (User.IsInRole(Utility.Helper.Admin))
+            {
+                Department Department = await _db.Departments.FindAsync(id);
+                _db.Departments.Remove(Department);
+                 await _db.SaveChangesAsync();
+                return RedirectToAction("Index");
+            }
+            return RedirectToAction("Index", "Portal");
+        }
+        //Finalizer
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _db.Dispose();
+            }
+            base.Dispose(disposing);
+        }
     }
 }

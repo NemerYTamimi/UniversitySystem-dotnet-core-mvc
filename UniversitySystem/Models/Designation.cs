@@ -10,7 +10,7 @@ namespace UniversitySystem.Models
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Please Enter a Valid Name")]
+        [Required(ErrorMessage = "Please Enter a Valid Designation Name")]
         public string Name { get; set; }
     }
 }

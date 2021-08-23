@@ -20,9 +20,7 @@ namespace UniversitySystem.Controllers
 
         public IActionResult Index()
         {
-            ViewData["CompanyName"] = "Demo University";
-            ViewData["Title"] = "Home";
-            return View();
+            return RedirectToAction("Index", "Portal");
         }
 
         public IActionResult Privacy()

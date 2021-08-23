@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using UniversitySystem.Models.ViewModels;
+using System.Threading.Tasks;
 
 namespace UniversitySystem.Controllers
 {
@@ -25,36 +26,36 @@ namespace UniversitySystem.Controllers
         }
 
         // GET: DesignationController
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
             var designations = _db.Designations;
             return View(designations);
         }
 
-        // GET: DesignationController/Details/5
-        public ActionResult Details(int id)
+        // GET: Designation/Details/5
+        public async Task<ActionResult> Details(int id)
         {
             var designations = _db.Designations.Find(id);
             return View(designations);
         }
 
-        // GET: DesignationController/Create
-        public ActionResult Create()
+        // GET: Designation/Create
+        public async Task<ActionResult> Create()
         {
             return View();
         }
 
-        // POST: DesignationController/Create
+        // POST: Designation/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Designation designation)
+        public async Task<ActionResult> Create(Designation designation)
         {
             if (User.IsInRole(Utility.Helper.Admin))
             {
                 if (ModelState.IsValid)
                 {
                     _db.Designations.Add(designation);
-                    _db.SaveChanges();
+                    await _db.SaveChangesAsync();
                     ViewBag.Message = "Student Registered Successfully";
                 }
                 return RedirectToAction("Index");
@@ -62,8 +63,8 @@ namespace UniversitySystem.Controllers
             return RedirectToAction("Index", "Portal");
         }
 
-        // GET: DesignationController/Edit/5
-        public ActionResult Edit(int? id)
+        // GET: Designation/Edit/5
+        public async Task<ActionResult> Edit(int? id)
         {
             if (User.IsInRole(Utility.Helper.Admin))
             {
@@ -81,17 +82,17 @@ namespace UniversitySystem.Controllers
             return RedirectToAction("Index", "Portal");
         }
 
-        // POST: DesignationController/Edit/5
+        // POST: Designation/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(Designation designation)
+        public async Task<ActionResult> Edit(Designation designation)
         {
             if (User.IsInRole(Utility.Helper.Admin))
             {
                 if (ModelState.IsValid)
                 {
                     _db.Entry(designation).State = EntityState.Modified;
-                    _db.SaveChanges();
+                    await _db.SaveChangesAsync();
                     return RedirectToAction("Index");
                 }
                 return View(designation);
@@ -99,8 +100,8 @@ namespace UniversitySystem.Controllers
             return RedirectToAction("Index", "Portal");
         }
 
-        // GET: DesignationController/Delete/5
-        public ActionResult Delete(int? id)
+        // GET: Designation/Delete/5
+        public async Task<ActionResult> Delete(int? id)
         {
             if (User.IsInRole(Utility.Helper.Admin))
             {
@@ -118,16 +119,16 @@ namespace UniversitySystem.Controllers
             return RedirectToAction("Index", "Portal");
         }
 
-        // POST: DesignationController/Delete/5
+        // POST: Designation/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
             if (User.IsInRole(Utility.Helper.Admin))
             {
                 Designation designation = _db.Designations.Find(id);
                 _db.Designations.Remove(designation);
-                _db.SaveChanges();
+                await _db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
             return RedirectToAction("Index", "Portal");

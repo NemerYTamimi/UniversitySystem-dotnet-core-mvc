@@ -1,8 +1,6 @@
 ﻿@model UniversitySystem.Models.Student
 
-@{
-    ViewData["Title"] = "Edit";
-}
+<partial name="_PortalPartial" />
 
 <hr />
 <div class="row">
@@ -45,6 +43,7 @@
 
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
             </div>
         </form>
     </div>

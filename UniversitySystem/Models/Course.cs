@@ -16,12 +16,12 @@ namespace UniversitySystem.Models
         [Required(ErrorMessage = "Please Enter a Unique Course Code")]
         [Display(Name = "Code")]
         [StringLength(100, MinimumLength = 5, ErrorMessage = "Course Code Must be 5 characters long")]
-        [Remote("IsUniqueCode", "Course", ErrorMessage = "Course Code already exists!")]
+        //[Remote("IsUniqueCode", "Course", ErrorMessage = "Course Code already exists!")]
         public string CourseCode { get; set; }
 
         [Required(ErrorMessage = "Please Enter Course Name")]
         [Display(Name = "Name")]
-        [Remote("IsUniqueName", "Course", ErrorMessage = "Course Name already exists!")]
+        //[Remote("IsUniqueName", "Course", ErrorMessage = "Course Name already exists!")]
         [StringLength(150)]
         [Column(TypeName = "Varchar")]
         public string CourseName { get; set; }
@@ -35,6 +35,7 @@ namespace UniversitySystem.Models
         [Display(Name = "Description")]
         [DataType(DataType.MultilineText)]
         [Column(TypeName = "Varchar")]
+        [StringLength(500)]
         public string CourseDescription { get; set; }
 
        

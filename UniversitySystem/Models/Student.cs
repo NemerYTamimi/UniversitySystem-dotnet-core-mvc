@@ -40,7 +40,6 @@ namespace UniversitySystem.Models
         public int DepartmentId { get; set; }
         public virtual Department Department { get; set; }
 
-        [Required]
         [DisplayName("Student Id")]
         public string StudentRegNo { get; set; } // Auto Generated
 
@@ -48,5 +47,6 @@ namespace UniversitySystem.Models
 
         public static string Role = Utility.Helper.Teacher;
 
+        public bool Status { get; set; }
     }
 }

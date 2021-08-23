@@ -1,12 +1,10 @@
 ﻿@model IEnumerable<UniversitySystem.Models.Department>
 
 @{
-    ViewData["Title"] = "Index";
-}
-@{
     IEnumerable<Department> departments = ViewBag.DepartmentList;
 }
-<h1>Index</h1>
+
+<partial name="_PortalPartial" />
 
 <p>
     <a asp-action="Create">Create New</a>

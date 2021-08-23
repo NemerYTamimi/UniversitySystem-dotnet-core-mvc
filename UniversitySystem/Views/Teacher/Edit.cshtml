@@ -3,11 +3,11 @@
 @{
     ViewData["Title"] = "Edit";
 }
+<partial name="_PortalPartial" />
 
-<hr />
 <div class="text-white">
     <div class="">
-        <form asp-action="Edit" >
+        <form asp-action="Edit">
             <h3>Edit teacher info</h3>
             <hr />
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -44,6 +44,8 @@
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+
             </div>
         </form>
     </div>

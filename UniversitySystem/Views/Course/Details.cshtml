@@ -1,0 +1,67 @@
+﻿@model UniversitySystem.Models.Course
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<partial name="_PortalPartial" />
+
+<div>
+    <h4>Course</h4>
+    <hr />
+    <dl class="row  text-white">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CourseCode)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CourseCode)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CourseName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CourseName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CourseCredit)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CourseCredit)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CourseDescription)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CourseDescription)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CourseAssignTo)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CourseAssignTo)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CourseStatus)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CourseStatus)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Department)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Department.DeptCode)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Semester)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Semester.Name)
+        </dd>
+    </dl>
+</div>
+<div class="m-5">
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-dark">Edit</a> |
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+</div>
+

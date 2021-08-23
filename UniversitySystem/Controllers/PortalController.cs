@@ -28,8 +28,7 @@ namespace UniversitySystem.Controllers
                 return RedirectToAction("Login", "Account");
             }
             ViewData["CompanyName"] = "Demo University";
-            //return View();
-            return RedirectToAction("Index", "Department");
+            return View();
         }
     }
 }
