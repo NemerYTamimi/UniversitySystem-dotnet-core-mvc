@@ -21,12 +21,20 @@ namespace UniversitySystem.Services
 
         public bool IsDepartmentCodeExist(string DeptCode)
         {
-            throw new NotImplementedException();
+            if(_db.Departments.Count(d => d.DeptCode == DeptCode) > 0)
+            {
+                return true;
+            }
+            return false;
         }
 
         public bool IsDepartmentNameExist(string DeptName)
         {
-            throw new NotImplementedException();
+            if (_db.Departments.Count(d => d.DeptName == DeptName) > 0)
+            {
+                return true;
+            }
+            return false;
         }
 
         public string SaveDepartment(Department department)
@@ -39,6 +47,17 @@ namespace UniversitySystem.Services
             }
             return "Failed to create the department, you enter an empty data";
         }
+        public string DeleteDepartment(int? id)
+        {
+            Department department = _db.Departments.Find(id);
+            if (department != null)
+            {
+                _db.Departments.Remove(department);
+                _db.SaveChanges();
+                return $"Department Successfully removed";
+            }
+            return "Failed to remove the department, you enter a wrong data";
+        }
 
         public string EditDepartment(Department department)
         {
@@ -48,7 +67,20 @@ namespace UniversitySystem.Services
                 _db.SaveChanges();
                 return $"Department Successfully edited with code = {department.DeptCode}";
             }
-            return "Failed to create the department, you enter an empty data";
+            return "Failed to edit the department, you enter an empty data";
         }
+        public Department GetDepartment(int? id)
+        {
+            if(id != null)
+            {
+                Department department = _db.Departments.Find(id);
+                if(department != null)
+                {
+                    return department;
+                }
+            }
+            return null;
+        }
+
     }
 }

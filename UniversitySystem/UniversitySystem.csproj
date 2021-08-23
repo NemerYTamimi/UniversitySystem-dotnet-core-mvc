@@ -59,4 +59,10 @@
     <Folder Include="Controllers\Api\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="System.Web.Mvc">
+      <HintPath>..\..\University-Management-System-using-ASP.NET-MVC\ZerOneUniversityApp\Bin\System.Web.Mvc.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

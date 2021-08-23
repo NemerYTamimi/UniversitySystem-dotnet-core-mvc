@@ -30,20 +30,20 @@ namespace UniversitySystem.Controllers
         }
 
         [HttpGet]
-        public  async Task<ActionResult> Create()
+        public async Task<ActionResult> Create()
         {
             return View();
         }
 
         // GET: Department/Details/5
-        public  async Task<ActionResult> Details(int id)
+        public async Task<ActionResult> Details(int id)
         {
-            var departments =  _db.Departments.FindAsync(id);
+            var departments = _db.Departments.FindAsync(id);
             return View(departments);
         }
 
         [HttpPost]
-        public  async Task<ActionResult> Create(Department department)
+        public async Task<ActionResult> Create(Department department)
         {
             try
             {
@@ -58,37 +58,36 @@ namespace UniversitySystem.Controllers
             }
         }
 
-        public  async Task<ActionResult> Index()
+        public async Task<ActionResult> Index()
         {
             IEnumerable<Department> departments = _departmentService.GetAllDepartment();
             ViewBag.DepartmentList = departments;
             return View();
         }
 
-        public JsonResult IsDeptCodeExists(string code)
+        public ActionResult IsDeptCodeExists(string code)
         {
             bool isDeptCodeExists = _departmentService.IsDepartmentCodeExist(code);
 
             if (isDeptCodeExists)
-                return Json(false, new Newtonsoft.Json.JsonSerializerSettings());
+                return Json(false);
             else
             {
-                return Json(true, new Newtonsoft.Json.JsonSerializerSettings());
+                return Json(true);
             }
         }
-        public JsonResult IsDeptNameExists(string name)
+        public ActionResult IsDeptNameExists(string name)
         {
             bool isDeptNameExists = _departmentService.IsDepartmentNameExist(name);
             if (isDeptNameExists)
-                return Json(false, new Newtonsoft.Json.JsonSerializerSettings());
+                return Json(false);
             else
             {
-                return Json(true, new Newtonsoft.Json.JsonSerializerSettings());
-
+                return Json(true);
             }
         }
         // GET: Department/Edit/5
-        public  async Task<ActionResult> Edit(int? id)
+        public async Task<ActionResult> Edit(int? id)
         {
             if (User.IsInRole(Utility.Helper.Admin))
             {
@@ -96,7 +95,7 @@ namespace UniversitySystem.Controllers
                 {
                     return BadRequest();
                 }
-                Department department = await _db.Departments.FindAsync(id);
+                Department department = _departmentService.GetDepartment(id);
                 if (department == null)
                 {
                     return NotFound();
@@ -109,36 +108,33 @@ namespace UniversitySystem.Controllers
         // POST: Department/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public  async Task<ActionResult> Edit(Department Department)
+        public async Task<ActionResult> Edit(Department department)
         {
             if (User.IsInRole(Utility.Helper.Admin))
             {
                 if (ModelState.IsValid)
                 {
-                    _db.Entry(Department).State = EntityState.Modified;
-                     await _db.SaveChangesAsync();
+                    _departmentService.EditDepartment(department);
                     return RedirectToAction("Index");
                 }
-                return View(Department);
+                return View(department);
             }
             return RedirectToAction("Index", "Portal");
         }
 
         // GET: Department/Delete/5
-        public  async Task<ActionResult> Delete(int? id)
+        public async Task<ActionResult> Delete(int? id)
         {
             if (User.IsInRole(Utility.Helper.Admin))
             {
-                if (id == null)
+                if (id != null)
                 {
-                    return BadRequest();
+                    Department department = _departmentService.GetDepartment(id);
+                    if(department != null)
+                    {
+                        return View(department);
+                    }
                 }
-                Department Department = await _db.Departments.FindAsync(id);
-                if (Department != null)
-                {
-                    return View(Department);
-                }
-                return NotFound();
             }
             return RedirectToAction("Index", "Portal");
         }
@@ -146,17 +142,20 @@ namespace UniversitySystem.Controllers
         // POST: Department/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public  async Task<ActionResult> Delete(int id)
+        public async Task<ActionResult> Delete(Department department)
         {
             if (User.IsInRole(Utility.Helper.Admin))
             {
-                Department Department = await _db.Departments.FindAsync(id);
-                _db.Departments.Remove(Department);
-                 await _db.SaveChangesAsync();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    _departmentService.DeleteDepartment(department.Id);
+                    return RedirectToAction("Index");
+                }
+                return View(department);
             }
             return RedirectToAction("Index", "Portal");
         }
+
         //Finalizer
         protected override void Dispose(bool disposing)
         {

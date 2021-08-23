@@ -5,15 +5,17 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using UniversitySystem.Models;
+using UniversitySystem.Models.ViewModels;
 
 namespace UniversitySystem.Controllers
 {
-    public class ClassRoomAllocationsController : Controller
+    public class ClassRoomAllocationController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public ClassRoomAllocationsController(ApplicationDbContext context)
+        public ClassRoomAllocationController(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -50,10 +52,10 @@ namespace UniversitySystem.Controllers
         // GET: ClassRoomAllocations/Create
         public IActionResult Create()
         {
-            ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "CourseCode");
-            ViewData["DayId"] = new SelectList(_context.Days, "Id", "Name");
-            ViewData["DepartmentId"] = new SelectList(_context.Departments, "Id", "DeptCode");
-            ViewData["RoomId"] = new SelectList(_context.Rooms, "Id", "Name");
+            ViewBag.courses = _context.Courses.Where(s => s.CourseStatus == true).ToList();
+            ViewBag.departments = _context.Departments.ToList();
+            ViewBag.Rooms = _context.Rooms.ToList();
+            ViewBag.Days = _context.Days.ToList();
             return View();
         }
 
@@ -172,6 +174,109 @@ namespace UniversitySystem.Controllers
         private bool ClassRoomAllocationExists(int id)
         {
             return _context.ClassRoomAllocations.Any(e => e.Id == id);
+        }
+
+        [HttpPost]
+        [Produces("application/json")]
+
+        public IActionResult GetClassScheduleInfo(string jsonInput = "")
+        {
+            int deptId= JsonConvert.DeserializeObject<int>(jsonInput);
+            var courses = _context.Courses.Where(m => m.DepartmentId == deptId).ToList();
+            return Json(courses);
+        }
+        [HttpPost]
+        [Produces("application/json")]
+
+        public IActionResult SaveRoomSchedule(string jsonInput = "")
+        {
+            if(jsonInput != null)
+            {
+                ClassRoomAllocation classRoomAllocation = JsonConvert.DeserializeObject<ClassRoomAllocation>(jsonInput);
+
+                var scheduleList = _context.ClassRoomAllocations.Where(m => m.RoomId == classRoomAllocation.RoomId && m.DayId == classRoomAllocation.DayId && m.RoomStatus == "Allocated").ToList();
+                if (scheduleList.Count == 0)
+                {
+                    classRoomAllocation.RoomStatus = "Allocated";
+                    _context.ClassRoomAllocations.Add(classRoomAllocation);
+                    _context.SaveChanges();
+                    return Json(true);
+                }
+                else
+                {
+                    bool status = false;
+                    foreach (var allocation in scheduleList)
+                    {
+                        if ((classRoomAllocation.StartTime >= allocation.StartTime && classRoomAllocation.StartTime < allocation.EndTime)
+                             || (classRoomAllocation.EndTime > allocation.StartTime && classRoomAllocation.EndTime <= allocation.EndTime) && classRoomAllocation.RoomStatus == "Allocated")
+                        {
+                            status = true;
+                        }
+                    }
+                    if (status == false)
+                    {
+                        classRoomAllocation.RoomStatus = "Allocated";
+                        _context.ClassRoomAllocations.Add(classRoomAllocation);
+                        _context.SaveChanges();
+                        return Json(true);
+                    }
+                    else
+                    {
+                        return Json(false);
+                    }
+                }
+            }
+            return BadRequest();
+
+        }
+
+        [HttpPost]
+        [Produces("application/json")]
+        public IActionResult GetCoursesByDeptId(string jsonInput = "")
+        {
+            if (jsonInput != null)
+            {
+                try
+                {
+                    DepartmentVM department = JsonConvert.DeserializeObject<DepartmentVM>(jsonInput);
+                    var courses = _context.Courses.Where(m => m.DepartmentId == department.DepartmentId).ToList();
+                    return /*Ok();*/ Ok(courses);
+                }
+                catch(Exception e)
+                {
+                    return BadRequest(e.Message);
+                }
+            }
+            return BadRequest();
+        }
+        public IActionResult UnAllocateAllRooms(bool decision)
+        {
+            var roomStatus = _context.ClassRoomAllocations.Where(m => m.RoomStatus == "Allocated").ToList();
+            if (roomStatus.Count == 0)
+            {
+                return Json(false);
+            }
+            else
+            {
+                foreach (var room in roomStatus)
+                {
+                    room.RoomStatus = "";
+                    _context.ClassRoomAllocations.Update(room);
+                    _context.SaveChanges();
+
+                }
+                return Json(true);
+            }
+
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _context.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
 }

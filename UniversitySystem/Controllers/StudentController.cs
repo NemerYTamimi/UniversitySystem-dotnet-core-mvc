@@ -111,9 +111,13 @@ namespace UniversitySystem.Controllers
         }
 
 
-        public JsonResult IsEmailExists(string Email)
+        public ActionResult IsEmailExists(string Email)
         {
-            return Json(!_db.Students.Any(m => m.Email == Email), new Newtonsoft.Json.JsonSerializerSettings());
+            if (Email != null)
+            {
+                return Json(!_db.Students.Any(m => m.Email == Email));
+            }
+            return BadRequest();
         }
 
         // GET: /Student/Edit/5

@@ -1,0 +1,222 @@
+﻿@model UniversitySystem.Models.ClassRoomAllocation
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<partial name="_PortalPartial" />
+@Html.AntiForgeryToken()
+<hr />
+<form class="text-white">
+    <div class="form-horizontal">
+        <h3>Course Allocation</h3>
+        <hr />
+        @Html.ValidationSummary(true)
+        <div class="form-group">
+            <div>
+                <select name="departmentId" id="departmentId" class="form-control">
+                    <option value="">Select Department</option>
+                    @foreach (var department in ViewBag.departments)
+                    {
+                        <option value="@department.Id">@department.DeptCode</option>
+                    }
+                </select><label id="deptErrorMessage" style="color: red;"></label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div >
+
+                <select name="courseId" id="courseId" class="form-control">
+                    <option value="">Select Course</option>
+
+                </select><label id="courseErrorMessage" style="color: red;"></label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div>
+                <select name="roomId" id="roomId" class="form-control">
+                    <option value=0>Select Room</option>
+                    @foreach (var room in ViewBag.Rooms)
+                    {
+                        <option value="@room.Id">@room.Name</option>
+                    }
+                </select><label id="roomErrorMessage" style="color: red;"></label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div>
+                <select name="dayId" id="dayId" class="form-control">
+                    <option value=0>Select Day</option>
+                    @foreach (var day in ViewBag.Days)
+                    {
+                        <option value="@day.Id">@day.Name</option>
+                    }
+                </select><label id="dayErrorMessage" style="color: red;"></label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label">From</label>
+            <div>
+
+                <input type="time" id="startTime" name="startTime" class="form-control" /> <label id="startTimeErrorMessage" style="color: red;"></label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label">To</label>
+            <div >
+                <input type="time" id="endTime" name="endTime" class="form-control" /><label id="endTimeErrorMessage" style="color: red;"></label>
+            </div>
+        </div>
+        <div class="form-group text-center">
+            <div>
+                <input type="submit" value="Class Room Allocation" id="submit" class="btn btn-primary btn-sm" />
+            </div>
+        </div>
+        <div class="form-group">
+            <p class="text-center"><label id="Message" class="text-secondary"></label></p>
+        </div>
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script>
+    $(document).ready(function () {
+
+        $("#departmentId").change(function () {
+
+            $("#Message").text("");
+
+            var departmentId = $("#departmentId").val();
+            var data = { DepartmentId: departmentId };
+
+            $("#courseId").empty();
+            $("#courseId").append('<option value=0></option>');
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetCoursesByDeptId", "ClassRoomAllocation")',
+                data: { jsonInput: JSON.stringify(data) },
+                dataType: "json",
+                success: function (data) {
+                    // alert("Success");
+                    $.each(data, function (key, value) {
+                        // alert(value.id + " " + value.courseCode);
+                        $("#courseId").append('<option value=' + value.id + '>' + value.courseCode + '</option>');
+                    });
+                }
+            });
+        });
+
+        $("#submit").click(function () {
+            var errorValue = 0;
+            ResetErrorLabel();
+            var departmentId = $("#departmentId").val();
+            if (departmentId == 0) {
+                $("#departmentErroMessage").text("Select One Department!");
+                errorValue = 1;
+
+            }
+
+            var courseId = $("#courseId").val();
+            if (courseId == 0) {
+                $("#courseErrorMessage").text("Select One Course!");
+                errorValue = 1;
+            }
+
+            var roomId = $("#roomId").val();
+            if (roomId == 0) {
+                $("#roomErrorMessage").text("Select One Room!");
+                errorValue = 1;
+            }
+
+            var dayId = $("#dayId").val();
+            if (dayId == 0) {
+                $("#dayErrorMessage").text("Select One Day!");
+                errorValue = 1;
+            }
+
+            var time = $("#startTime").val();
+
+            if (time == "") {
+
+                $("#startTimeErrorMessage").text("Start time is Required!");
+                errorValue = 1;
+            }
+
+            var hour = parseInt(time.substr(0, 2));
+            var minute = parseInt(time.substr(3, 5));
+            var startTime = hour * 60 + minute;
+
+
+            time = $("#endTime").val();
+            if (time == "") {
+
+                $("#endTimeErrorMessage").text("End time is Required!");
+                errorValue = 1;
+            }
+
+            hour = parseInt(time.substr(0, 2));
+            minute = parseInt(time.substr(3, 5));
+            var endTime = hour * 60 + minute;
+
+
+            if (errorValue == 1) {
+                return false;
+            }
+
+            if (startTime == endTime) {
+                $("#Message").text("Its not Possible to create Zero Minute Duration class");
+                return false;
+            } else if (startTime < endTime) {
+                var jsonData = { DepartmentId: departmentId, courseId: courseId, RoomId: roomId, DayId: dayId, StartTime: startTime, EndTime: endTime };
+
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("SaveRoomSchedule", "ClassRoomAllocation")',
+                    data: { jsonInput: JSON.stringify(jsonData) },
+                    dataType: "json",
+                    success: function (data) {
+                        if (data == true) {
+                            $("#Message").text("Class Room Schedule Saved Successfully!");
+                            $("#departmentId").prop("selectedIndex", 0);
+                            $("#courseId").prop("selectedIndex", 0);
+                            $("#roomId").prop("selectedIndex", 0);
+                            $("#dayId").prop("selectedIndex", 0);
+                            $("#startTime").val('mm/dd/yyyy');
+                            $("#endTime").val('mm/dd/yyyy');
+                            return false;
+                        } else {
+                            $("#Message").text("Overlapping Problem, Change Time or Day.");
+                            return false;
+                        }
+                    }
+                });
+
+            } else {
+                $("#Message").text("Invalid Time chosen");
+            }
+
+
+            return false;
+        });
+
+    });
+
+
+    function ResetErrorLabel() {
+        $("#deptErrorMessage").text("");
+        $("#courseErrorMessage").text("");
+        $("#roomErrorMessage").text("");
+        $("#dayErrorMessage").text("");
+        $("#startTimeErrorMessage").text("");
+        $("#endTimeErrorMessage").text("");
+    }
+
+    </script>
+}

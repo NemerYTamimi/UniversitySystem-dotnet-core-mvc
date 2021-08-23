@@ -2,6 +2,26 @@
 
 @{
     ViewData["Title"] = "Details";
+    var startTimeHour = Math.Floor(Model.StartTime / 60).ToString();
+    var startTimeMin = (Model.StartTime % 60).ToString();
+    if(double.Parse(startTimeHour)<10)
+    {
+        startTimeHour = "0" + startTimeHour;
+    }
+    if (double.Parse(startTimeMin) < 10)
+    {
+        startTimeMin = "0" + startTimeMin;
+    }
+    var endTimeHour = Math.Floor(Model.EndTime / 60).ToString();
+    var endTimeMin = (Model.EndTime % 60).ToString();
+    if (double.Parse(endTimeHour) < 10)
+    {
+        endTimeHour = "0" + endTimeHour;
+    }
+    if (double.Parse(endTimeMin) < 10)
+    {
+        endTimeMin = "0" + endTimeMin;
+    }
 }
 <partial name="_PortalPartial" />
 
@@ -37,13 +57,13 @@
             @Html.DisplayNameFor(model => model.StartTime)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.StartTime)
+            @string.Concat(string.Concat(startTimeHour, ":"),startTimeMin)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.EndTime)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.EndTime)
+            @string.Concat(string.Concat(endTimeHour, ":"), endTimeMin)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.RoomStatus)
@@ -54,6 +74,5 @@
     </dl>
 </div>
 <div class="m-5">
-    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-dark">Edit</a> |
     <a asp-action="Index" class="btn btn-secondary">Back to List</a>
 </div>

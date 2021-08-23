@@ -196,6 +196,23 @@ namespace UniversitySystem.Controllers
 
         }
 
+        public ActionResult IsUniqueCode(string CourseCode)
+        {
+            if (CourseCode != null)
+            {
+                return Json(!_db.Courses.Any(m => m.CourseCode == CourseCode));
+            }
+            return BadRequest();
+        }
+        public ActionResult IsUniqueName(string CourseName)
+        {
+            if (CourseName != null)
+            {
+                return Json(!_db.Courses.Any(m => m.CourseName == CourseName));
+            }
+            return BadRequest();
+        }
+
         private bool CourseExists(int id)
         {
             return _db.Courses.Any(e => e.Id == id);

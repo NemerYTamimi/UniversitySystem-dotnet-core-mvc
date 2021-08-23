@@ -1,0 +1,39 @@
+﻿@model UniversitySystem.Models.Department
+
+@{
+    ViewData["Title"] = "Edit";
+}
+<partial name="_PortalPartial" />
+
+<hr />
+<div class="row text-white">
+    <div>
+        <form asp-action="Edit">
+            <h3>Edit Department Info</h3>
+            <hr />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="DeptCode" class="control-label"></label>
+                <input asp-for="DeptCode" class="form-control" />
+                <span asp-validation-for="DeptCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DeptName" class="control-label"></label>
+                <input asp-for="DeptName" class="form-control" />
+                <span asp-validation-for="DeptName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -89,3 +89,7 @@
     .login-dark textarea {
         resize: none;
     }
+
+    .login-dark  select{
+        padding: 1px 5px;
+    }

@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using UniversitySystem.Models.ViewModels;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace UniversitySystem.Controllers
 {
@@ -93,10 +94,13 @@ namespace UniversitySystem.Controllers
             }
             return RedirectToAction("Index", "Portal");
         }
-
-        public JsonResult IsEmailExists(string TeacherEmail)
+        public ActionResult IsEmailExists(string teacherEmail)
         {
-            return Json(!_db.Teachers.Any(m => m.TeacherEmail == TeacherEmail), new Newtonsoft.Json.JsonSerializerSettings());
+            if (teacherEmail != null)
+            {
+                return Json(!_db.Teachers.Any(m => m.TeacherEmail == teacherEmail));
+            }
+            return BadRequest();
         }
 
         // GET: /Teacher/Edit/5
