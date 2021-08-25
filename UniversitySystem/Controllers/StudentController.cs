@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading.Tasks;
 using UniversitySystem.Models;
 using UniversitySystem.Models.ViewModels;
 
@@ -14,20 +11,14 @@ namespace UniversitySystem.Controllers
     public class StudentController : Controller
     {
         private readonly ApplicationDbContext _db;
-        UserManager<ApplicationUser> _userManager;
-        SignInManager<ApplicationUser> _signInManager;
-        RoleManager<IdentityRole> _roleManager;
 
-        public StudentController(ApplicationDbContext db, UserManager<ApplicationUser> userManager,
-            RoleManager<IdentityRole> roleManager, SignInManager<ApplicationUser> signInManager)
+
+        public StudentController(ApplicationDbContext db)
         {
             _db = db;
-            _userManager = userManager;
-            _roleManager = roleManager;
-            _signInManager = signInManager;
         }
         // GET: /Student/
-        public async Task<ActionResult> Index()
+        public ActionResult Index()
         {
             if (User.IsInRole(Utility.Helper.Admin))
             {
@@ -53,10 +44,18 @@ namespace UniversitySystem.Controllers
                 }
                 Student student = _db.Students.Find(id);
                 student.Department = _db.Departments.Find(student.DepartmentId);
+
                 if (student == null)
                 {
                     return NotFound();
                 }
+                Finanial finanial = await _db.Finanials.FirstOrDefaultAsync(f => f.StudentId == student.Id);
+                if (finanial == null)
+                {
+                    return NotFound();
+                }
+                ViewBag.credit = finanial.Credit;
+                ViewBag.used = finanial.CreditUsed;
                 return View(student);
             }
             return RedirectToAction("Index", "Portal");
@@ -67,7 +66,7 @@ namespace UniversitySystem.Controllers
         {
             if (User.IsInRole(Utility.Helper.Admin))
             {
-                ViewBag.DepartmentId = new SelectList(_db.Departments, "Id", "DeptCode");
+                ViewBag.DepartmentId = new SelectList(await _db.Departments.ToListAsync(), "Id", "DeptCode");
                 return View();
             }
             return RedirectToAction("Index", "Portal");
@@ -86,6 +85,14 @@ namespace UniversitySystem.Controllers
                     student.Status = true;
                     _db.Students.Add(student);
                     await _db.SaveChangesAsync();
+
+                    Finanial finanial = new Finanial()
+                    {
+                        StudentId = student.Id
+                    };
+                    await _db.Finanials.AddAsync(finanial);
+                    await _db.SaveChangesAsync();
+
                     ViewBag.Message = "Student Registered Successfully";
                 }
                 ViewBag.DepartmentId = new SelectList(_db.Departments, "Id", "DeptCode", student.DepartmentId);
@@ -95,9 +102,9 @@ namespace UniversitySystem.Controllers
         }
         public async Task<string> GetStudentRegNo(Student aStudent)
         {
-            var count = _db.Students.Count(m => (m.DepartmentId == aStudent.DepartmentId) && (m.Date.Year == aStudent.Date.Year)) + 1;
+            var count = await _db.Students.CountAsync(m => (m.DepartmentId == aStudent.DepartmentId) && (m.Date.Year == aStudent.Date.Year)) + 1;
 
-            var aDepartment = _db.Departments.FirstOrDefault(m => m.Id == aStudent.DepartmentId);
+            var aDepartment = await _db.Departments.FirstOrDefaultAsync(m => m.Id == aStudent.DepartmentId);
 
             /* if regNumber = 10 will be converted to 4 digits = 0010 */
             string leadingZero = "";
@@ -129,12 +136,12 @@ namespace UniversitySystem.Controllers
                 {
                     return BadRequest();
                 }
-                Student student = _db.Students.Find(id);
+                Student student = await _db.Students.FindAsync(id);
                 if (student == null)
                 {
                     return NotFound();
                 }
-                ViewBag.DepartmentId = new SelectList(_db.Departments, "Id", "DeptCode", student.DepartmentId);
+                ViewBag.DepartmentId = new SelectList(await _db.Departments.ToListAsync(), "Id", "DeptCode", student.DepartmentId);
                 return View(student);
             }
             return RedirectToAction("Index", "Portal");
@@ -153,7 +160,7 @@ namespace UniversitySystem.Controllers
                     await _db.SaveChangesAsync();
                     return RedirectToAction("Index");
                 }
-                ViewBag.DepartmentId = new SelectList(_db.Departments, "Id", "DeptCode", student.DepartmentId);
+                ViewBag.DepartmentId = new SelectList(await _db.Departments.ToListAsync(), "Id", "DeptCode", student.DepartmentId);
                 return View(student);
             }
             return RedirectToAction("Index", "Portal");
@@ -168,7 +175,7 @@ namespace UniversitySystem.Controllers
                 {
                     return BadRequest();
                 }
-                Student student = _db.Students.Find(id);
+                Student student = await _db.Students.FindAsync(id);
                 if (student != null)
                 {
                     StudentVM studentVM = new StudentVM()
@@ -192,13 +199,61 @@ namespace UniversitySystem.Controllers
         {
             if (User.IsInRole(Utility.Helper.Admin))
             {
-                Student student = _db.Students.Find(id);
+                Student student = await _db.Students.FindAsync(id);
                 student.Status = false;
                 await _db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
             return RedirectToAction("Index", "Portal");
         }
+
+
+        // GET: /Student/AddCredit/5
+        public async Task<ActionResult> AddCredit(int? id)
+        {
+            if (User.IsInRole(Utility.Helper.Admin))
+            {
+                if (id == null)
+                {
+                    return BadRequest();
+                }
+                Student student = await _db.Students.FindAsync(id);
+                if (student != null)
+                {
+                    StudentCreditVM studentCreditVM = new StudentCreditVM()
+                    {
+                        StudentRegNo = student.StudentRegNo
+                    };
+                    return View(studentCreditVM);
+                }
+                return NotFound();
+            }
+            return RedirectToAction("Index", "Portal");
+        }
+
+        // POST: /Student/AddCredit/
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> AddCredit(StudentCreditVM studentCreditVM)
+        {
+            if (User.IsInRole(Utility.Helper.Admin))
+            {
+                Student student = await _db.Students.FirstOrDefaultAsync(s => s.StudentRegNo == studentCreditVM.StudentRegNo);
+                if (student != null)
+                {
+                    Finanial finanial = await _db.Finanials.FirstOrDefaultAsync(f => f.StudentId == student.Id);
+                    if (finanial != null)
+                    {
+                        finanial.Credit += studentCreditVM.Credit;
+                        await _db.SaveChangesAsync();
+                        return RedirectToAction("Index");
+                    }
+                }
+                return NotFound();
+            }
+            return RedirectToAction("Index", "Portal");
+        }
+
 
         //Finalizer
         protected override void Dispose(bool disposing)

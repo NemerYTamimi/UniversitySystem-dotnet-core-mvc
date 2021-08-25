@@ -4,69 +4,77 @@
 {
     if (User.IsInRole(UniversitySystem.Utility.Helper.Admin))
     {<nav class="navbar navbar-dark navbar-expand-md navigation-clean-button">
-    <div class="container">
-        <div class="collapse navbar-collapse" id="navcol-1">
-            <ul class="navbar-nav mx-auto">
-                <li class="nav-item dropdown">
-                    <a data-bs-toggle="dropdown" class="dropdown-toggle nav-link" href="#">Students</a>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" asp-action="Create" asp-controller="Student">Add Student</a>
-                        <a class="dropdown-item" asp-action="Index" asp-controller="Student">List of Students</a>
-                    </div>
-                </li>
-                <li class="nav-item dropdown">
-                    <a data-bs-toggle="dropdown" class="dropdown-toggle nav-link" href="#">Teachers</a>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" asp-action="Create" asp-controller="Teacher">Add Teacher</a>
-                        <a class="dropdown-item" asp-action="Index" asp-controller="Teacher">List of Teachers</a>
-                    </div>
-                </li>
-                <li class="nav-item dropdown">
-                    <a data-bs-toggle="dropdown" class="dropdown-toggle nav-link" href="#">Courses</a>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" asp-action="Create" asp-controller="Course">Add Course</a>
-                        <a class="dropdown-item" asp-action="Index" asp-controller="Course">List of Courses</a>
-                    </div>
-                </li>
-                <li class="nav-item dropdown">
-                    <a data-bs-toggle="dropdown" class="dropdown-toggle nav-link" href="#">Rooms</a>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" asp-action="Create" asp-controller="Room">Add Room</a>
-                        <a class="dropdown-item" asp-action="Index" asp-controller="Room">List of Rooms</a>
-                    </div>
-                </li>
-                <li class="nav-item dropdown">
-                    <a data-bs-toggle="dropdown" class="dropdown-toggle nav-link" href="#">Semesters</a>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" asp-action="Create" asp-controller="Semester">Add Semester</a>
-                        <a class="dropdown-item" asp-action="Index" asp-controller="Semester">List of Semesters</a>
-                    </div>
-                </li>
-                <li class="nav-item dropdown">
-                    <a data-bs-toggle="dropdown" class="dropdown-toggle nav-link" href="#">Designations</a>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" asp-action="Create" asp-controller="Designation">Add Designation</a>
-                        <a class="dropdown-item" asp-action="Index" asp-controller="Designation">List of Designations</a>
-                    </div>
-                </li>
-                <li class="nav-item dropdown">
-                    <a data-bs-toggle="dropdown" class="dropdown-toggle nav-link" href="#">Department</a>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" asp-action="Create" asp-controller="Department">Add Department</a>
-                        <a class="dropdown-item" asp-action="Index" asp-controller="Department">List of Departments</a>
-                    </div>
-                </li>
-                <li class="nav-item dropdown">
-                    <a data-bs-toggle="dropdown" class="dropdown-toggle nav-link" href="#">Class Room Allocations</a>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" asp-action="Create" asp-controller="ClassRoomAllocation">Add new</a>
-                        <a class="dropdown-item" asp-action="Index" asp-controller="ClassRoomAllocation">List</a>
-                    </div>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
+            <div class="container">
+                <div class="collapse navbar-collapse" id="navcol-1">
+                    <ul class="navbar-nav mx-auto">
+                        <li class="nav-item dropdown">
+                            <a data-bs-toggle="dropdown" class="dropdown-toggle nav-link" href="#">Students</a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" asp-action="Create" asp-controller="Student">Add Student</a>
+                                <a class="dropdown-item" asp-action="Index" asp-controller="Student">List of Students</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a data-bs-toggle="dropdown" class="dropdown-toggle nav-link" href="#">Teachers</a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" asp-action="Create" asp-controller="Teacher">Add Teacher</a>
+                                <a class="dropdown-item" asp-action="Index" asp-controller="Teacher">List of Teachers</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a data-bs-toggle="dropdown" class="dropdown-toggle nav-link" href="#">Courses</a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" asp-action="Create" asp-controller="Course">Add Course</a>
+                                <a class="dropdown-item" asp-action="Index" asp-controller="Course">List of Courses</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a data-bs-toggle="dropdown" class="dropdown-toggle nav-link" href="#">Rooms</a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" asp-action="Create" asp-controller="Room">Add Room</a>
+                                <a class="dropdown-item" asp-action="Index" asp-controller="Room">List of Rooms</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a data-bs-toggle="dropdown" class="dropdown-toggle nav-link" href="#">Semesters</a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" asp-action="Create" asp-controller="Semester">Add Semester</a>
+                                <a class="dropdown-item" asp-action="Index" asp-controller="Semester">List of Semesters</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a data-bs-toggle="dropdown" class="dropdown-toggle nav-link" href="#">Designations</a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" asp-action="Create" asp-controller="Designation">Add Designation</a>
+                                <a class="dropdown-item" asp-action="Index" asp-controller="Designation">List of Designations</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a data-bs-toggle="dropdown" class="dropdown-toggle nav-link" href="#">Department</a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" asp-action="Create" asp-controller="Department">Add Department</a>
+                                <a class="dropdown-item" asp-action="Index" asp-controller="Department">List of Departments</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a data-bs-toggle="dropdown" class="dropdown-toggle nav-link" href="#">Class Room Allocations</a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" asp-action="Create" asp-controller="ClassRoomAllocation">Add new</a>
+                                <a class="dropdown-item" asp-action="Index" asp-controller="ClassRoomAllocation">List</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a data-bs-toggle="dropdown" class="dropdown-toggle nav-link" href="#">
+                                Course Assigns
+                            </a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" asp-action="Save" asp-controller="CourseAssign">Assign new</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
     }
 }
 else

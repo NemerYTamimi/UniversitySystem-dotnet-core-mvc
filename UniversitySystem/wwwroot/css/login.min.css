@@ -56,7 +56,8 @@
         background-color: #1e2833;
         width: 80%;
         margin: auto;
-        text-align: center
+        text-align: center;
+        border: 1px solid #dee2e6 !important;
     }
 
         .login-dark form .btn-primary:active, .login-dark form .btn-primary:hover {

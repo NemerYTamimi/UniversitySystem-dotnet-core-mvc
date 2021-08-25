@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using UniversitySystem.Models;
 
 namespace UniversitySystem.Controllers
@@ -13,16 +9,10 @@ namespace UniversitySystem.Controllers
     public class GradeController : Controller
     {
         private readonly ApplicationDbContext _db;
-        UserManager<ApplicationUser> _userManager;
-        SignInManager<ApplicationUser> _signInManager;
-        RoleManager<IdentityRole> _roleManager;
-        public GradeController(ApplicationDbContext db, UserManager<ApplicationUser> userManager,
-            RoleManager<IdentityRole> roleManager, SignInManager<ApplicationUser> signInManager)
+
+        public GradeController(ApplicationDbContext db)
         {
             _db = db;
-            _userManager = userManager;
-            _roleManager = roleManager;
-            _signInManager = signInManager;
         }
         // GET: Grade
         public async Task<IActionResult> Index()

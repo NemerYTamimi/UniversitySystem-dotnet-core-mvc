@@ -1,11 +1,9 @@
-﻿using UniversitySystem.Models;
-using UniversitySystem.Utility;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using UniversitySystem.Models;
+using UniversitySystem.Utility;
 
 namespace UniversitySystem.DbInitializer
 {

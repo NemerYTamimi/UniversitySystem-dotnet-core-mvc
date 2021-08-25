@@ -1,0 +1,193 @@
+﻿@model UniversitySystem.Models.CourseAssign
+
+    <partial name="_PortalPartial" />
+
+
+    <form>
+
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            <h3 class="text-center">
+                Course Assign to Teacher
+            </h3>
+            <hr />
+            <div class="form-group">
+                <div>
+                    <p class="text-center text-warning"><label id="AssignLabel"></label></p>
+                </div>
+            </div>
+            @Html.ValidationSummary(true)
+
+            <div class="form-group">
+                <label class="control-label">Department</label>
+                <div class="">
+                    <select name="departmentId" id="departmentId" class="form-control">
+
+                        <option value="">Select Department</option>
+                        @foreach (var aDepartment in ViewBag.Departments)
+                        {
+                            <option value="@aDepartment.Id">@aDepartment.DeptCode</option>
+                        }
+                    </select><label id="DeptErrorLabel" class="text-danger"></label>
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.TeacherId, "Teacher", new { @class = "control-label col-md-2" })
+                <div class="">
+                    <select name="teacherId" id="teacherId" class="form-control"><option value="">Select Teacher</option></select>
+                    <label id="TeacherErrorLabel" class="text-danger"></label>
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Course</label>
+                <div class="">
+                    <select name="courseId" id="courseId" class="form-control"><option value="">Select Course Code</option></select>
+                    <label id="CourseErrorLabel" class="text-danger"></label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="">
+                    <input type="submit" name="submit" id="submit" value="Assign Course" class="btn btn-primary btn-sm" />
+                </div>
+            </div>
+
+
+        </div>
+
+    </form>
+
+    @section Scripts
+
+{
+        <script src="~//lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+        <script>
+        $(function () {
+
+            $("#departmentId").change(function () {
+
+                ResetLabel();
+
+                $("#teacherId").empty();
+                var departmentId = $("#departmentId").val();
+                var data = { Id: departmentId };
+                $("#teacherId").append('<option value=0>Select Teacher</option>');
+                $.ajax({
+
+                    type: "POST",
+                    url: '@Url.Action("GetTeacherByDeptId","CourseAssign")',
+                    data: { jsonInput: JSON.stringify(data) },
+                    dataType: "json",
+                    success: function(data) {
+                        $.each(data, function(key, value) {
+
+                            $("#teacherId").append('<option value=' + value.id + '>' + value.name + '</option>');
+
+                        });
+                    },
+
+                });
+
+
+                $("#courseId").empty();
+                var jasonData = { Id: departmentId };
+                $("#courseId").append('<option value=0>Select Course</option>');
+                $.ajax({
+
+                    type: "POST",
+                    url: '@Url.Action("GetCourseByDeptId","CourseAssign")',
+                    data: { jsonInput: JSON.stringify(jasonData) },
+                    dataType: "json",
+                    success: function (data) {
+                        $.each(data, function (key, value) {
+                            $("#courseId").append('<option value=' + value.id + '>' + value.courseCode + '</option>');
+                        });
+                    },
+
+                });
+
+                return false;
+            });
+
+
+            $("#submit").click(function() {
+                var errorValue = 0;
+                // ResetLabel();
+                var departmentId = $("#departmentId").val();
+
+                if (departmentId == 0) {
+                    $("#DeptErrorLabel").text("Select  Department ");
+                    errorValue = 1;
+                }
+
+                var teacherId = $("#teacherId").val();
+
+                if (teacherId == 0) {
+                    $("#TeacherErrorLabel").text("Select Teacher ");
+                    errorValue = 1;
+                }
+
+                var courseId = $("#courseId").val();
+                if (courseId == 0) {
+                    $("#CourseErrorLabel").text("Select  Course ");
+                    errorValue = 1;
+                }
+                if (errorValue == 1) {
+                    return false;
+                }
+                else {
+
+                        var jasonData = { DepartmentId: departmentId, TeacherId: teacherId, CourseId: courseId };
+                        $.ajax({
+                            type: "POST",
+                            url: '@Url.Action("SaveCourseAssign", "CourseAssign")',
+                            data: { jsonInput: JSON.stringify(jasonData) },
+                            dataType: "json",
+                            success: function(data) {
+
+                                if (data == true)
+
+                                    $("#AssignLabel").text("Successfully course Assigned");
+                                    //alert("Successfully Assigned");
+                                else {
+                                    $("#AssignLabel").text("This course is already Assigned");
+                                    //alert("This course is already Assigned");
+                                }
+                                ResetValue();
+                            },
+                        });
+
+                    return false;
+                }
+
+            });
+            return false;
+        });
+
+        function ResetValue() {
+            $("#courseId").empty();
+            $("#teacherId").empty();
+            $("#departmentId").prop("selectedIndex", 0);
+        }
+
+        function ResetLabel() {
+            $("#DeptErrorLabel").text("");
+            $("#TeacherErrorLabel").text("");
+            $("#CourseErrorLabel").text("");
+        }
+
+        function DecisionLabel() {
+            $("#AssignLabel").text("");
+            $("#AssignLabel").text("");
+        }
+
+        </script>
+
+    }

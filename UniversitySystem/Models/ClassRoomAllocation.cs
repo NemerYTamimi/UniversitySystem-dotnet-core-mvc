@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace UniversitySystem.Models
 {
@@ -36,7 +32,7 @@ namespace UniversitySystem.Models
         public double EndTime { get; set; }
 
         [Required]
-        [Display(Name ="Is Allocated?")]
+        [Display(Name = "Status")]
         public string RoomStatus { get; set; }
     }
 }

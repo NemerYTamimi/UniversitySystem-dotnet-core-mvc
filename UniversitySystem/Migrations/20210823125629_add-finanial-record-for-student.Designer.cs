@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UniversitySystem.Models;
 
 namespace UniversitySystem.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210823125629_add-finanial-record-for-student")]
+    partial class addfinanialrecordforstudent
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -288,9 +290,6 @@ namespace UniversitySystem.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("Capacity")
-                        .HasColumnType("int");
-
                     b.Property<string>("CourseAssignTo")
                         .HasColumnType("nvarchar(max)");
 
@@ -340,8 +339,20 @@ namespace UniversitySystem.Migrations
                     b.Property<int>("CourseId")
                         .HasColumnType("int");
 
+                    b.Property<double>("Credit")
+                        .HasColumnType("float");
+
+                    b.Property<double>("CreditLeft")
+                        .HasColumnType("float");
+
+                    b.Property<double>("CreditTaken")
+                        .HasColumnType("float");
+
                     b.Property<int>("DepartmentId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("TeacherId")
                         .HasColumnType("int");
@@ -457,12 +468,7 @@ namespace UniversitySystem.Migrations
                     b.Property<double>("CreditUsed")
                         .HasColumnType("float");
 
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("StudentId");
 
                     b.ToTable("Finanials");
                 });
@@ -532,9 +538,15 @@ namespace UniversitySystem.Migrations
                     b.Property<int>("DepartmentId")
                         .HasColumnType("int");
 
+                    b.Property<int>("DinanialId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("FinanialId")
+                        .HasColumnType("int");
 
                     b.Property<string>("LoginUserId")
                         .HasColumnType("nvarchar(max)");
@@ -558,6 +570,8 @@ namespace UniversitySystem.Migrations
 
                     b.HasIndex("DepartmentId");
 
+                    b.HasIndex("FinanialId");
+
                     b.ToTable("Students");
                 });
 
@@ -571,6 +585,12 @@ namespace UniversitySystem.Migrations
                     b.Property<string>("Address")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("CreditLeft")
+                        .HasColumnType("float");
+
+                    b.Property<double>("CreditTaken")
+                        .HasColumnType("float");
 
                     b.Property<int>("DepartmentId")
                         .HasColumnType("int");
@@ -758,17 +778,6 @@ namespace UniversitySystem.Migrations
                     b.Navigation("Student");
                 });
 
-            modelBuilder.Entity("UniversitySystem.Models.Finanial", b =>
-                {
-                    b.HasOne("UniversitySystem.Models.Student", "Student")
-                        .WithMany()
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Student");
-                });
-
             modelBuilder.Entity("UniversitySystem.Models.Student", b =>
                 {
                     b.HasOne("UniversitySystem.Models.Department", "Department")
@@ -777,7 +786,13 @@ namespace UniversitySystem.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("UniversitySystem.Models.Finanial", "Finanial")
+                        .WithMany()
+                        .HasForeignKey("FinanialId");
+
                     b.Navigation("Department");
+
+                    b.Navigation("Finanial");
                 });
 
             modelBuilder.Entity("UniversitySystem.Models.Teacher", b =>

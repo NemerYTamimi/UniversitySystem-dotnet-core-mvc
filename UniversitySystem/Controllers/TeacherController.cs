@@ -1,33 +1,24 @@
-﻿using UniversitySystem.Models;
-using Microsoft.AspNetCore.Mvc;
-using System.Linq;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using UniversitySystem.Models.ViewModels;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
+using UniversitySystem.Models;
+using UniversitySystem.Models.ViewModels;
 
 namespace UniversitySystem.Controllers
 {
     public class TeacherController : Controller
     {
         private readonly ApplicationDbContext _db;
-        UserManager<ApplicationUser> _userManager;
-        SignInManager<ApplicationUser> _signInManager;
-        RoleManager<IdentityRole> _roleManager;
 
-        public TeacherController(ApplicationDbContext db, UserManager<ApplicationUser> userManager,
-            RoleManager<IdentityRole> roleManager, SignInManager<ApplicationUser> signInManager)
+        public TeacherController(ApplicationDbContext db)
         {
             _db = db;
-            _userManager = userManager;
-            _roleManager = roleManager;
-            _signInManager = signInManager;
         }
 
         // GET: /Teacher/
-        public async Task<ActionResult> Index()
+        public ActionResult Index()
         {
             if (User.IsInRole(Utility.Helper.Admin))
             {
@@ -52,7 +43,7 @@ namespace UniversitySystem.Controllers
                 {
                     return BadRequest();
                 }
-                Teacher teacher = _db.Teachers.Find(id);
+                Teacher teacher = await _db.Teachers.FindAsync(id);
                 if (teacher == null)
                 {
                     return NotFound();
@@ -67,8 +58,8 @@ namespace UniversitySystem.Controllers
         {
             if (User.IsInRole(Utility.Helper.Admin))
             {
-                ViewBag.DepartmentId = new SelectList(_db.Departments, "Id", "DeptCode");
-                ViewBag.DesignationId = new SelectList(_db.Designations, "Id", "Name");
+                ViewBag.DepartmentId = new SelectList(await _db.Departments.ToListAsync(), "Id", "DeptCode");
+                ViewBag.DesignationId = new SelectList(await _db.Designations.ToListAsync(), "Id", "Name");
                 return View();
             }
             return RedirectToAction("Index", "Portal");
@@ -112,7 +103,7 @@ namespace UniversitySystem.Controllers
                 {
                     return BadRequest();
                 }
-                Teacher teacher = _db.Teachers.Find(id);
+                Teacher teacher = await _db.Teachers.FindAsync(id);
                 if (teacher == null)
                 {
                     return NotFound();
@@ -154,7 +145,7 @@ namespace UniversitySystem.Controllers
                 {
                     return BadRequest();
                 }
-                Teacher teacher = _db.Teachers.Find(id);
+                Teacher teacher = await _db.Teachers.FindAsync(id);
                 if (teacher == null)
                 {
                     return NotFound();
@@ -172,7 +163,7 @@ namespace UniversitySystem.Controllers
         {
             if (User.IsInRole(Utility.Helper.Admin))
             {
-                Teacher teacher = _db.Teachers.Find(id);
+                Teacher teacher = await _db.Teachers.FindAsync(id);
                 _db.Teachers.Remove(teacher);
                 await _db.SaveChangesAsync();
                 return RedirectToAction("Index");

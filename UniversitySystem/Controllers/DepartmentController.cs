@@ -1,10 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using UniversitySystem.Models;
 using UniversitySystem.Services;
 
@@ -12,38 +8,22 @@ namespace UniversitySystem.Controllers
 {
     public class DepartmentController : Controller
     {
-        private readonly ApplicationDbContext _db;
-        UserManager<ApplicationUser> _userManager;
-        SignInManager<ApplicationUser> _signInManager;
-        RoleManager<IdentityRole> _roleManager;
         private readonly IDepartmentService _departmentService;
 
-
-        public DepartmentController(ApplicationDbContext db, UserManager<ApplicationUser> userManager,
-            RoleManager<IdentityRole> roleManager, SignInManager<ApplicationUser> signInManager, IDepartmentService departmentService)
+        public DepartmentController(IDepartmentService departmentService)
         {
-            _db = db;
-            _userManager = userManager;
-            _roleManager = roleManager;
-            _signInManager = signInManager;
             _departmentService = departmentService;
         }
 
         [HttpGet]
-        public async Task<ActionResult> Create()
+        public ActionResult Create()
         {
             return View();
         }
 
-        // GET: Department/Details/5
-        public async Task<ActionResult> Details(int id)
-        {
-            var departments = _db.Departments.FindAsync(id);
-            return View(departments);
-        }
 
         [HttpPost]
-        public async Task<ActionResult> Create(Department department)
+        public ActionResult Create(Department department)
         {
             try
             {
@@ -58,7 +38,7 @@ namespace UniversitySystem.Controllers
             }
         }
 
-        public async Task<ActionResult> Index()
+        public ActionResult Index()
         {
             IEnumerable<Department> departments = _departmentService.GetAllDepartment();
             ViewBag.DepartmentList = departments;
@@ -87,7 +67,7 @@ namespace UniversitySystem.Controllers
             }
         }
         // GET: Department/Edit/5
-        public async Task<ActionResult> Edit(int? id)
+        public ActionResult Edit(int? id)
         {
             if (User.IsInRole(Utility.Helper.Admin))
             {
@@ -108,7 +88,7 @@ namespace UniversitySystem.Controllers
         // POST: Department/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(Department department)
+        public ActionResult Edit(Department department)
         {
             if (User.IsInRole(Utility.Helper.Admin))
             {
@@ -123,14 +103,14 @@ namespace UniversitySystem.Controllers
         }
 
         // GET: Department/Delete/5
-        public async Task<ActionResult> Delete(int? id)
+        public ActionResult Delete(int? id)
         {
             if (User.IsInRole(Utility.Helper.Admin))
             {
                 if (id != null)
                 {
                     Department department = _departmentService.GetDepartment(id);
-                    if(department != null)
+                    if (department != null)
                     {
                         return View(department);
                     }
@@ -142,7 +122,7 @@ namespace UniversitySystem.Controllers
         // POST: Department/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Delete(Department department)
+        public ActionResult Delete(Department department)
         {
             if (User.IsInRole(Utility.Helper.Admin))
             {
@@ -156,14 +136,14 @@ namespace UniversitySystem.Controllers
             return RedirectToAction("Index", "Portal");
         }
 
-        //Finalizer
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
+        ////Finalizer
+        //protected override void Dispose(bool disposing)
+        //{
+        //    if (disposing)
+        //    {
+        //        _departmentService.disposeDb();
+        //    }
+        //    base.Dispose(disposing);
+        //}
     }
 }

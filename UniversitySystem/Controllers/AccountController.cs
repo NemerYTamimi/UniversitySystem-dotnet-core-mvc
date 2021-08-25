@@ -1,13 +1,10 @@
-﻿using UniversitySystem.Models;
-using UniversitySystem.Models.ViewModels;
-using UniversitySystem.Utility;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using UniversitySystem.Models;
+using UniversitySystem.Models.ViewModels;
+using UniversitySystem.Utility;
 
 namespace UniversitySystem.Controllers
 {
@@ -16,14 +13,12 @@ namespace UniversitySystem.Controllers
         private readonly ApplicationDbContext _db;
         UserManager<ApplicationUser> _userManager;
         SignInManager<ApplicationUser> _signInManager;
-        RoleManager<IdentityRole> _roleManager;
 
         public AccountController(ApplicationDbContext db, UserManager<ApplicationUser> userManager,
-            RoleManager<IdentityRole> roleManager, SignInManager<ApplicationUser> signInManager)
+            SignInManager<ApplicationUser> signInManager)
         {
             _db = db;
             _userManager = userManager;
-            _roleManager = roleManager;
             _signInManager = signInManager;
         }
 
