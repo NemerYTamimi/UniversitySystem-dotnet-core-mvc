@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Web;
 
 namespace UniversitySystem.Models
 {
@@ -9,7 +12,7 @@ namespace UniversitySystem.Models
 
         [Required(ErrorMessage = "Please Select Student By Registration Number")]
         [Display(Name = "Student Reg. No.")]
-        public string RegistrationNo { get; set; }
+        public string RegistrationNo { get; set; } 
         public virtual Student Student { get; set; }
 
         [Required(ErrorMessage = "Please Select  Course")]
@@ -23,7 +26,7 @@ namespace UniversitySystem.Models
         [Display(Name = "Date")]
         public DateTime EnrollDate { get; set; }
 
-        [Display(Name = "Grade")]
+        [Display(Name ="Grade")]
         public Grade CourseGrade { get; set; }
     }
 }

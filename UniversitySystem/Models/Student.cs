@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Web;
 
 namespace UniversitySystem.Models
 {
@@ -9,7 +12,7 @@ namespace UniversitySystem.Models
     {
         public int Id { get; set; }
 
-        [Required]
+        [Required ]
         public string Name { get; set; }
 
         [Required]
@@ -25,7 +28,7 @@ namespace UniversitySystem.Models
 
         [Required(ErrorMessage = "The Date Field is Required.")]
         [DataType(DataType.Date)]
-        public DateTime Date { get; set; }
+        public DateTime Date { get; set; } 
 
         [Required]
         [DataType(DataType.MultilineText)]

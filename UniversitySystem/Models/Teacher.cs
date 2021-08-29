@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -9,7 +10,7 @@ namespace UniversitySystem.Models
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Enter Teacher Name")]
+        [Required(ErrorMessage = "Enter Teacher Name") ]
         [DisplayName("Name")]
         public string Name { get; set; }
 
@@ -30,13 +31,13 @@ namespace UniversitySystem.Models
         [StringLength(14, MinimumLength = 7, ErrorMessage = "Invalid Phone Number")]
         public string PhoneNumber { get; set; }
 
-        [Required(ErrorMessage = "Select A Designation")]
+        [Required(ErrorMessage ="Select A Designation" )]
         [DisplayName("Designation")]
         public int DesignationId { get; set; }
         public virtual Designation Designation { get; set; }
 
         [Required(ErrorMessage = "Select Department")]
-        [DisplayName("Department")]
+        [DisplayName ("Department")]
         public int DepartmentId { get; set; }
 
         [ForeignKey("DepartmentId")]

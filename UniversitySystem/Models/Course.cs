@@ -1,7 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Configuration;
+using System.Linq;
+using System.Web;
 
 namespace UniversitySystem.Models
 {
@@ -33,7 +38,7 @@ namespace UniversitySystem.Models
         [Column(TypeName = "Varchar")]
         [StringLength(500)]
         public string CourseDescription { get; set; }
-
+       
         public string CourseAssignTo { get; set; }
 
         public bool CourseStatus { get; set; }
@@ -51,7 +56,7 @@ namespace UniversitySystem.Models
         public virtual Semester Semester { get; set; }
 
         [Required]
-        [Range(0, 200)]
+        [Range(0,200)]
         public int Capacity { get; set; }
     }
 }

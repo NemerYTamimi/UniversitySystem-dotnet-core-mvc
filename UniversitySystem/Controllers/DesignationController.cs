@@ -1,7 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using UniversitySystem.Models;
+using Microsoft.AspNetCore.Mvc;
+using System.Linq;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using UniversitySystem.Models.ViewModels;
 using System.Threading.Tasks;
-using UniversitySystem.Models;
 
 namespace UniversitySystem.Controllers
 {

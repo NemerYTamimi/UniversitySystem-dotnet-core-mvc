@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
+﻿using UniversitySystem.Models;
+using Microsoft.AspNetCore.Mvc;
 using System.Linq;
-using System.Threading.Tasks;
-using UniversitySystem.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using UniversitySystem.Models.ViewModels;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace UniversitySystem.Controllers
 {
@@ -22,7 +24,7 @@ namespace UniversitySystem.Controllers
         {
             if (User.IsInRole(Utility.Helper.Admin))
             {
-                var teachers = _db.Teachers.Include(s => s.Department).Include(t => t.Designation).Select(teacher => new TeacherVM()
+                var teachers =   _db.Teachers.Include(s => s.Department).Include(t => t.Designation).Select(teacher => new TeacherVM()
                 {
                     Id = teacher.Id,
                     Email = teacher.TeacherEmail,
@@ -48,6 +50,8 @@ namespace UniversitySystem.Controllers
                 {
                     return NotFound();
                 }
+                Department department = await _db.Departments.FindAsync(teacher.DepartmentId);
+                ViewBag.Department = department;
                 return View(teacher);
             }
             return RedirectToAction("Index", "Portal");

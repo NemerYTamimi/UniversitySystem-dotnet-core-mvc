@@ -1,6 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using UniversitySystem.Models;
 using UniversitySystem.Services;
 
@@ -110,7 +114,7 @@ namespace UniversitySystem.Controllers
                 if (id != null)
                 {
                     Department department = _departmentService.GetDepartment(id);
-                    if (department != null)
+                    if(department != null)
                     {
                         return View(department);
                     }

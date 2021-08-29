@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using UniversitySystem.Models;
 
 namespace UniversitySystem.Services
@@ -20,7 +23,7 @@ namespace UniversitySystem.Services
 
         public bool IsDepartmentCodeExist(string DeptCode)
         {
-            if (_db.Departments.Count(d => d.DeptCode == DeptCode) > 0)
+            if(_db.Departments.Count(d => d.DeptCode == DeptCode) > 0)
             {
                 return true;
             }
@@ -38,7 +41,7 @@ namespace UniversitySystem.Services
 
         public string SaveDepartment(Department department)
         {
-            if (department != null)
+            if(department != null)
             {
                 _db.Departments.Add(department);
                 _db.SaveChanges();
@@ -62,7 +65,7 @@ namespace UniversitySystem.Services
         {
             if (department != null)
             {
-                _db.Entry(department);
+                _db.Update(department);
                 _db.SaveChanges();
                 return $"Department Successfully edited with code = {department.DeptCode}";
             }
@@ -70,10 +73,10 @@ namespace UniversitySystem.Services
         }
         public Department GetDepartment(int? id)
         {
-            if (id != null)
+            if(id != null)
             {
                 Department department = _db.Departments.Find(id);
-                if (department != null)
+                if(department != null)
                 {
                     return department;
                 }

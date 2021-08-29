@@ -1,3 +1,5 @@
+using System;
+
 namespace UniversitySystem.Models
 {
     public class ErrorViewModel

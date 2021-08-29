@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using UniversitySystem.Models;
 using UniversitySystem.Models.ViewModels;
 
@@ -239,7 +242,7 @@ namespace UniversitySystem.Controllers
             if (User.IsInRole(Utility.Helper.Admin))
             {
                 Student student = await _db.Students.FirstOrDefaultAsync(s => s.StudentRegNo == studentCreditVM.StudentRegNo);
-                if (student != null)
+                if(student != null)
                 {
                     Finanial finanial = await _db.Finanials.FirstOrDefaultAsync(f => f.StudentId == student.Id);
                     if (finanial != null)

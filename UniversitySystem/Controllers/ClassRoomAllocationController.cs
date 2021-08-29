@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using UniversitySystem.Models;
 using UniversitySystem.Models.ViewModels;
 
@@ -180,7 +181,7 @@ namespace UniversitySystem.Controllers
 
         public IActionResult GetClassScheduleInfo(string jsonInput = "")
         {
-            int deptId = JsonConvert.DeserializeObject<int>(jsonInput);
+            int deptId= JsonConvert.DeserializeObject<int>(jsonInput);
             var courses = _context.Courses.Where(m => m.DepartmentId == deptId).ToList();
             return Json(courses);
         }
@@ -189,7 +190,7 @@ namespace UniversitySystem.Controllers
 
         public IActionResult SaveRoomSchedule(string jsonInput = "")
         {
-            if (jsonInput != null)
+            if(jsonInput != null)
             {
                 ClassRoomAllocation classRoomAllocation = JsonConvert.DeserializeObject<ClassRoomAllocation>(jsonInput);
 
@@ -241,7 +242,7 @@ namespace UniversitySystem.Controllers
                     var courses = _context.Courses.Where(m => m.DepartmentId == department.Id).ToList();
                     return /*Ok();*/ Ok(courses);
                 }
-                catch (Exception e)
+                catch(Exception e)
                 {
                     return BadRequest(e.Message);
                 }
