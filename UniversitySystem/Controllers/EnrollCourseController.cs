@@ -69,14 +69,13 @@ namespace UniversitySystem.Controllers
 
                 if (course != null)
                 {
-                    if (_studentService.UseCredit(enrollCourse.RegistrationNo, course.CourseCredit))
+                    if (!IsFullCapacity(course.Id))
                     {
-                        if (_studentService.NumOfEnrolledCourses(enrollCourse.RegistrationNo, course.SemesterId) < 7)
+                        if (!_studentService.IsEnrolled(enrollCourse.RegistrationNo, course.SemesterId, enrollCourse.CourseId))
                         {
-
-                            if (!_studentService.IsEnrolled(enrollCourse.RegistrationNo, course.SemesterId, enrollCourse.CourseId))
+                            if (_studentService.NumOfEnrolledCourses(enrollCourse.RegistrationNo, course.SemesterId) < 7)
                             {
-                                if (!IsFullCapacity(course.Id))
+                                if (_studentService.UseCredit(enrollCourse.RegistrationNo, course.CourseCredit))
                                 {
                                     _db.Add(enrollCourse);
                                     await _db.SaveChangesAsync();
@@ -84,22 +83,22 @@ namespace UniversitySystem.Controllers
                                 }
                                 else
                                 {
-                                    ViewData["msg"] = "The course capacity is full";
+                                    ViewData["msg"] = "The student credit is not enough to enroll in the course";
                                 }
                             }
                             else
                             {
-                                ViewData["msg"] = "The student is already enrolled in the course";
+                                 ViewData["msg"] = "The student exceeds number of enrolled courses in the same semester";
                             }
                         }
                         else
                         {
-                            ViewData["msg"] = "The student exceeds number of enrolled courses in the same semester";
+                            ViewData["msg"] = "The student is already enrolled in the course";
                         }
                     }
                     else
                     {
-                        ViewData["msg"] = "The student credit is not enough to enroll in the course";
+                        ViewData["msg"] = "The course capacity is full";
                     }
                 }
             }

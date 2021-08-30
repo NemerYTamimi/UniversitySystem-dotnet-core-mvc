@@ -12,6 +12,7 @@ namespace UniversitySystem.Services
         public double CheckCredit(string StudentRegNo);
         public int NumOfEnrolledCourses(string StudentRegNo, int SemesterId);
         public bool IsEnrolled(string studentRegNo, int semesterId, int courseId);
+        public bool HasBrotherAndOlder(string studentRegNo);
 
     }
 }
