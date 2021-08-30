@@ -43,6 +43,10 @@ namespace UniversitySystem.Models
         [DisplayName("Student Id")]
         public string StudentRegNo { get; set; } // Auto Generated
 
+        [Required(ErrorMessage = "The Parent Field is required.")]
+        [DisplayName("Parent")]
+        public int ParentId { get; set; }
+        public Parent Parent { get; set; }
         public string LoginUserId { get; set; }
 
         public static string Role = Utility.Helper.Teacher;

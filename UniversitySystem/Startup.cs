@@ -31,8 +31,8 @@ namespace UniversitySystem
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>
-                //(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            (options => options.UseSqlServer(Configuration.GetConnectionString("ServerConnection")));
+                (options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            //(options => options.UseSqlServer(Configuration.GetConnectionString("ServerConnection")));
             services.AddControllersWithViews();
             services.AddTransient<IDepartmentService, DepartmentService>();
             services.AddTransient<IStudentService, StudentService>();

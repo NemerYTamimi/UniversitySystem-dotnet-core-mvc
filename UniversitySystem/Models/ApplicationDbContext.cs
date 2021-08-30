@@ -26,6 +26,8 @@ namespace UniversitySystem.Models
         public DbSet<ClassSchedule> ClassSchedules { get; set; }
         public DbSet<EnrollCourse> EnrollCourses { get; set; }
         public DbSet<Finanial> Finanials { get; set; }
+        public DbSet<Parent> Parents { get; set; }
+
 
     }
 }

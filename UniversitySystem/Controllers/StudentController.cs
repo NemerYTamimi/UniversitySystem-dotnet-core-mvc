@@ -72,6 +72,7 @@ namespace UniversitySystem.Controllers
         {
             if (User.IsInRole(Utility.Helper.Admin))
             {
+                ViewBag.ParentId = new SelectList(await _db.Parents.ToListAsync(), "Id", "Name");
                 ViewBag.DepartmentId = new SelectList(await _db.Departments.ToListAsync(), "Id", "DeptCode");
                 return View();
             }
@@ -101,6 +102,7 @@ namespace UniversitySystem.Controllers
 
                     ViewBag.Message = "Student Registered Successfully";
                 }
+                ViewBag.ParentId = new SelectList(_db.Parents, "Id", "Name", student.ParentId);
                 ViewBag.DepartmentId = new SelectList(_db.Departments, "Id", "DeptCode", student.DepartmentId);
                 return RedirectToAction("Index");
             }
