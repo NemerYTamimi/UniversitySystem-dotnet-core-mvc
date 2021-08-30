@@ -68,8 +68,8 @@ namespace UniversitySystem.Controllers
         }
 
         // POST: Course/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+ 
+ 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,CourseCode,CourseName,CourseCredit,CourseDescription,CourseAssignTo,CourseStatus,DepartmentId,SemesterId,Capacity")] Course course)
@@ -114,11 +114,10 @@ namespace UniversitySystem.Controllers
         }
 
         // POST: Course/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CourseCode,CourseName,CourseCredit,CourseDescription,CourseAssignTo,CourseStatus,DepartmentId,SemesterId")] Course course)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,CourseName,CourseCode,CourseCredit,CourseDescription,CourseStatus,DepartmentId,SemesterId,Capacity")] Course course)
         {
             if (User.IsInRole(Utility.Helper.Admin))
             {
@@ -131,6 +130,9 @@ namespace UniversitySystem.Controllers
                 {
                     try
                     {
+                        _db.Entry<Course>(course).Property(x => x.CourseName).IsModified = false;
+                        _db.Entry<Course>(course).Property(x => x.CourseCode).IsModified = false;
+                        _db.Entry<Course>(course).Property(x => x.DepartmentId).IsModified = false;
                         _db.Update(course);
                         await _db.SaveChangesAsync();
                     }

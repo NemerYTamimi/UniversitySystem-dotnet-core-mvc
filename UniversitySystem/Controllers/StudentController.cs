@@ -8,17 +8,20 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using UniversitySystem.Models;
 using UniversitySystem.Models.ViewModels;
+using UniversitySystem.Services;
 
 namespace UniversitySystem.Controllers
 {
     public class StudentController : Controller
     {
         private readonly ApplicationDbContext _db;
+        private readonly IStudentService _studentService;
 
 
-        public StudentController(ApplicationDbContext db)
+        public StudentController(ApplicationDbContext db, IStudentService studentService)
         {
             _db = db;
+            _studentService = studentService;
         }
         // GET: /Student/
         public ActionResult Index()
@@ -241,16 +244,9 @@ namespace UniversitySystem.Controllers
         {
             if (User.IsInRole(Utility.Helper.Admin))
             {
-                Student student = await _db.Students.FirstOrDefaultAsync(s => s.StudentRegNo == studentCreditVM.StudentRegNo);
-                if(student != null)
+                if (_studentService.AddCredit(studentCreditVM.StudentRegNo, studentCreditVM.Credit))
                 {
-                    Finanial finanial = await _db.Finanials.FirstOrDefaultAsync(f => f.StudentId == student.Id);
-                    if (finanial != null)
-                    {
-                        finanial.Credit += studentCreditVM.Credit;
-                        await _db.SaveChangesAsync();
-                        return RedirectToAction("Index");
-                    }
+                    return RedirectToAction("Index");
                 }
                 return NotFound();
             }

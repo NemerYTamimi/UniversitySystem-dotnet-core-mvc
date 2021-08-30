@@ -12,6 +12,8 @@
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" asp-action="Create" asp-controller="Student">Add Student</a>
                                 <a class="dropdown-item" asp-action="Index" asp-controller="Student">List of Students</a>
+                                <a class="dropdown-item" asp-action="Index" asp-controller="EnrollCourse">List of Student Registrations</a>
+                                <a class="dropdown-item" asp-action="Create" asp-controller="EnrollCourse">register a student to course</a>
                             </div>
                         </li>
                         <li class="nav-item dropdown">
@@ -19,6 +21,10 @@
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" asp-action="Create" asp-controller="Teacher">Add Teacher</a>
                                 <a class="dropdown-item" asp-action="Index" asp-controller="Teacher">List of Teachers</a>
+                                <a class="dropdown-item" asp-action="Create" asp-controller="Designation">Add Designation</a>
+                                <a class="dropdown-item" asp-action="Index" asp-controller="Designation">List of Designations</a>
+                                <a class="dropdown-item" asp-action="Save" asp-controller="CourseAssign">Course Assign</a>
+
                             </div>
                         </li>
                         <li class="nav-item dropdown">
@@ -26,6 +32,10 @@
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" asp-action="Create" asp-controller="Course">Add Course</a>
                                 <a class="dropdown-item" asp-action="Index" asp-controller="Course">List of Courses</a>
+                                <a class="dropdown-item" asp-action="Create" asp-controller="ClassRoomAllocation">New Room Allocation</a>
+                                <a class="dropdown-item" asp-action="Index" asp-controller="ClassRoomAllocation">List of Class Room Allocation</a>
+                                <a class="dropdown-item" asp-action="Save" asp-controller="CourseAssign">Course Assign</a>
+
                             </div>
                         </li>
                         <li class="nav-item dropdown">
@@ -43,32 +53,10 @@
                             </div>
                         </li>
                         <li class="nav-item dropdown">
-                            <a data-bs-toggle="dropdown" class="dropdown-toggle nav-link" href="#">Designations</a>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item" asp-action="Create" asp-controller="Designation">Add Designation</a>
-                                <a class="dropdown-item" asp-action="Index" asp-controller="Designation">List of Designations</a>
-                            </div>
-                        </li>
-                        <li class="nav-item dropdown">
                             <a data-bs-toggle="dropdown" class="dropdown-toggle nav-link" href="#">Department</a>
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" asp-action="Create" asp-controller="Department">Add Department</a>
                                 <a class="dropdown-item" asp-action="Index" asp-controller="Department">List of Departments</a>
-                            </div>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a data-bs-toggle="dropdown" class="dropdown-toggle nav-link" href="#">Class Room Allocations</a>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item" asp-action="Create" asp-controller="ClassRoomAllocation">Add new</a>
-                                <a class="dropdown-item" asp-action="Index" asp-controller="ClassRoomAllocation">List</a>
-                            </div>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a data-bs-toggle="dropdown" class="dropdown-toggle nav-link" href="#">
-                                Course Assigns
-                            </a>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item" asp-action="Save" asp-controller="CourseAssign">Assign new</a>
                             </div>
                         </li>
                     </ul>

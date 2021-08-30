@@ -35,7 +35,7 @@ namespace UniversitySystem
             (options => options.UseSqlServer(Configuration.GetConnectionString("ServerConnection")));
             services.AddControllersWithViews();
             services.AddTransient<IDepartmentService, DepartmentService>();
-
+            services.AddTransient<IStudentService, StudentService>();
             services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddDistributedMemoryCache();
             services.AddScoped<IEmailSender, EmailSender>();
