@@ -193,27 +193,11 @@ namespace UniversitySystem.Controllers
             if(jsonInput != null)
             {
                 ClassRoomAllocation classRoomAllocation = JsonConvert.DeserializeObject<ClassRoomAllocation>(jsonInput);
-
-                var scheduleList = _context.ClassRoomAllocations.Where(m => m.RoomId == classRoomAllocation.RoomId && m.DayId == classRoomAllocation.DayId && m.RoomStatus == "Allocated").ToList();
-                if (scheduleList.Count == 0)
+                var course = _context.Courses.Include(m => m.Semester).First(m => m.Id == classRoomAllocation.CourseId);
+                if (course != null)
                 {
-                    classRoomAllocation.RoomStatus = "Allocated";
-                    _context.ClassRoomAllocations.Add(classRoomAllocation);
-                    _context.SaveChanges();
-                    return Json(true);
-                }
-                else
-                {
-                    bool status = false;
-                    foreach (var allocation in scheduleList)
-                    {
-                        if ((classRoomAllocation.StartTime >= allocation.StartTime && classRoomAllocation.StartTime < allocation.EndTime)
-                             || (classRoomAllocation.EndTime > allocation.StartTime && classRoomAllocation.EndTime <= allocation.EndTime) && classRoomAllocation.RoomStatus == "Allocated")
-                        {
-                            status = true;
-                        }
-                    }
-                    if (status == false)
+                    var scheduleList = _context.ClassRoomAllocations.Where(m => m.RoomId == classRoomAllocation.RoomId && m.DayId == classRoomAllocation.DayId && m.RoomStatus == "Allocated" && m.Course.Semester.Id == course.Semester.Id).ToList();
+                    if (scheduleList.Count == 0)
                     {
                         classRoomAllocation.RoomStatus = "Allocated";
                         _context.ClassRoomAllocations.Add(classRoomAllocation);
@@ -222,7 +206,26 @@ namespace UniversitySystem.Controllers
                     }
                     else
                     {
-                        return Json(false);
+                        bool status = false;
+                        foreach (var allocation in scheduleList)
+                        {
+                            if ((classRoomAllocation.StartTime >= allocation.StartTime && classRoomAllocation.StartTime < allocation.EndTime)
+                                 || (classRoomAllocation.EndTime > allocation.StartTime && classRoomAllocation.EndTime <= allocation.EndTime) && classRoomAllocation.RoomStatus == "Allocated")
+                            {
+                                status = true;
+                            }
+                        }
+                        if (status == false)
+                        {
+                            classRoomAllocation.RoomStatus = "Allocated";
+                            _context.ClassRoomAllocations.Add(classRoomAllocation);
+                            _context.SaveChanges();
+                            return Json(true);
+                        }
+                        else
+                        {
+                            return Json(false);
+                        }
                     }
                 }
             }
