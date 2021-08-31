@@ -126,11 +126,11 @@ namespace UniversitySystem.Controllers
         }
 
 
-        public ActionResult IsEmailExists(string Email)
+        public ActionResult IsEmailExists(string Email, int Id)
         {
             if (Email != null)
             {
-                return Json(!_db.Students.Any(m => m.Email == Email));
+                return Json(!_db.Students.Any(m => m.Email == Email && m.Id != Id));
             }
             return BadRequest();
         }

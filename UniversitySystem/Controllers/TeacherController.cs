@@ -89,11 +89,11 @@ namespace UniversitySystem.Controllers
             }
             return RedirectToAction("Index", "Portal");
         }
-        public ActionResult IsEmailExists(string teacherEmail)
+        public ActionResult IsEmailExists(string teacherEmail, int  Id)
         {
             if (teacherEmail != null)
             {
-                return Json(!_db.Teachers.Any(m => m.TeacherEmail == teacherEmail));
+                return Json(!_db.Teachers.Any(m => m.TeacherEmail == teacherEmail && m.Id != Id));
             }
             return BadRequest();
         }
