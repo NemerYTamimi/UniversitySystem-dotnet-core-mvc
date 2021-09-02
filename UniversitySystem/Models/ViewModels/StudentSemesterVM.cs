@@ -1,7 +1,8 @@
 ﻿namespace UniversitySystem.Models.ViewModels
 {
-    public class IdVM
+    public class StudentSemesterVM
     {
-        public int Id { get; set; }
+        public int SemesterId { get; set; }
+        public string StudentRegNo { get; set; }
     }
 }

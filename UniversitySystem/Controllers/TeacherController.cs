@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using UniversitySystem.Models;
@@ -199,6 +201,42 @@ namespace UniversitySystem.Controllers
                 return true;
             }
             return false;
+        }
+
+        public IActionResult MyCourses()
+        {
+            if (User.IsInRole(Helper.Teacher))
+            {
+                ViewBag.Semesters = _db.Semesters;
+                //var teacher = _db.Teachers.Where(s => s.Email == User.Identity.Name).FirstOrDefault();
+                //ViewBag.TeacherId = teacher.Id;
+                return View();
+            }
+            ViewData["msg"] = "You are not a teacehr!";
+            return RedirectToAction("Index", "Portal");
+        }
+
+        [HttpPost]
+        [Produces("application/json")]
+        public IActionResult TeacherCourses(string jsonInput = "")
+        {
+            if (jsonInput != null)
+            {
+                try
+                {
+                    var teacher = _db.Teachers.FirstOrDefault(m => m.Email == User.Identity.Name);
+                    IdVM semester = JsonConvert.DeserializeObject<IdVM>(jsonInput);
+                    var teacherCourses = _db.CourseAssigns
+                        .Include(m => m.Course)
+                        .Where(m => m.TeacherId == teacher.Id && m.Course.SemesterId == semester.Id);
+                    return /*Ok();*/ Ok(teacherCourses);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e.Message);
+                }
+            }
+            return BadRequest();
         }
 
         //Finalizer
