@@ -134,7 +134,7 @@ namespace UniversitySystem.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     TeacherName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TeacherAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TeacherEmail = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TeacherContactNo = table.Column<string>(type: "nvarchar(14)", maxLength: 14, nullable: false),
                     DesignationId = table.Column<int>(type: "int", nullable: false),
                     DepartmentId = table.Column<int>(type: "int", nullable: false),

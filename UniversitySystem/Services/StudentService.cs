@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UniversitySystem.Models;
+using UniversitySystem.Models.ViewModels;
 
 namespace UniversitySystem.Services
 {
@@ -110,6 +112,12 @@ namespace UniversitySystem.Services
                 }
             }
             return false;
+        }
+
+        public List<EnrollCourse> StudentCourses(string StudentRegNo, int SemesterId)
+        {
+            var courses = _db.EnrollCourses.Include(a => a.Course).Include(a => a.Student).Where(s => s.RegistrationNo ==StudentRegNo).ToList();
+            return courses;
         }
     }
 }

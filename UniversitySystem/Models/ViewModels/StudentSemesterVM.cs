@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 
 namespace UniversitySystem.Models.ViewModels
 {
-    public class StudentSemesterVM
+    public class IdVM
     {
-        public int SemesterId { get; set; }
-        public string StudentRegNo { get; set; }
+        public int Id { get; set; }
     }
 }

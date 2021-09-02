@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using UniversitySystem.Models;
 using UniversitySystem.Models.ViewModels;
 using UniversitySystem.Services;
+using UniversitySystem.Utility;
 
 namespace UniversitySystem.Controllers
 {
@@ -16,12 +18,15 @@ namespace UniversitySystem.Controllers
     {
         private readonly ApplicationDbContext _db;
         private readonly IStudentService _studentService;
+        UserManager<ApplicationUser> _userManager;
+        SignInManager<ApplicationUser> _signInManager;
 
-
-        public StudentController(ApplicationDbContext db, IStudentService studentService)
+        public StudentController(ApplicationDbContext db, IStudentService studentService, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager)
         {
             _db = db;
             _studentService = studentService;
+            _userManager = userManager;
+            _signInManager = signInManager;
         }
         // GET: /Student/
         public ActionResult Index()
@@ -97,10 +102,12 @@ namespace UniversitySystem.Controllers
                     {
                         StudentId = student.Id
                     };
-                    await _db.Finanials.AddAsync(finanial);
-                    await _db.SaveChangesAsync();
-
-                    ViewBag.Message = "Student Registered Successfully";
+                    if (await CreateAccount(student.Email, student.Name, Helper.Student))
+                    {
+                        await _db.Finanials.AddAsync(finanial);
+                        await _db.SaveChangesAsync();
+                        ViewBag.Message = "Student Registered Successfully";
+                    }
                 }
                 ViewBag.ParentId = new SelectList(_db.Parents, "Id", "Name", student.ParentId);
                 ViewBag.DepartmentId = new SelectList(_db.Departments, "Id", "DeptCode", student.DepartmentId);
@@ -108,6 +115,25 @@ namespace UniversitySystem.Controllers
             }
             return RedirectToAction("Index", "Portal");
         }
+
+        private async Task<bool> CreateAccount(string email, string name, string role)
+        {
+            var user = new ApplicationUser()
+            {
+                Name = name,
+                Email = email,
+                UserName = email
+            };
+            var result = await _userManager.CreateAsync(user, "ChangeMe123$");
+            if (result.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(user, role);
+                await _signInManager.SignInAsync(user, isPersistent: false);
+                return true;
+            }
+            return false;
+        }
+
         public async Task<string> GetStudentRegNo(Student aStudent)
         {
             var count = await _db.Students.CountAsync(m => (m.DepartmentId == aStudent.DepartmentId) && (m.Date.Year == aStudent.Date.Year)) + 1;
@@ -252,6 +278,41 @@ namespace UniversitySystem.Controllers
                 }
                 return NotFound();
             }
+            return RedirectToAction("Index", "Portal");
+        }
+
+        [HttpPost]
+        [Produces("application/json")]
+        public IActionResult StudentCourses(string jsonInput = "")
+        {
+            if (jsonInput != null)
+            {
+                try
+                {
+                    StudentSemesterVM ssvm = JsonConvert.DeserializeObject<StudentSemesterVM>(jsonInput);
+                    var studentCourses = _db.EnrollCourses
+                        .Include(m => m.Course)
+                        .Where(m => m.RegistrationNo == ssvm.StudentRegNo && m.Course.SemesterId == ssvm.SemesterId);
+                    return /*Ok();*/ Ok(studentCourses);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e.Message);
+                }
+            }
+            return BadRequest();
+        }
+
+        public IActionResult MyCourses()
+        {
+            if (User.IsInRole(Helper.Student))
+            {
+                ViewBag.Semesters = _db.Semesters;
+                var student = _db.Students.Where(s => s.Email == User.Identity.Name).FirstOrDefault();
+                ViewBag.StudentRegNo = student.StudentRegNo;
+                return View();
+            }
+            ViewData["msg"] = "You are not a student!";
             return RedirectToAction("Index", "Portal");
         }
 

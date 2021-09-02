@@ -23,7 +23,7 @@ namespace UniversitySystem.Models
         [DisplayName("Email")]
         [EmailAddress(ErrorMessage = "Invalid Email! Must Be Enter Valid Email Address.")]
         [Remote("IsEmailExists", "Teacher", ErrorMessage = "Email Address already exists!",AdditionalFields ="Id")]
-        public string TeacherEmail { get; set; }
+        public string Email { get; set; }
 
         [Required(ErrorMessage = "Enter a Valid Phone Number")]
         [DisplayName("Phone Number")]

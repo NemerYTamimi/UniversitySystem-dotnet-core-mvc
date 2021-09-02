@@ -3,7 +3,8 @@
 @if (signInManager.IsSignedIn(User))
 {
     if (User.IsInRole(UniversitySystem.Utility.Helper.Admin))
-    {<nav class="navbar navbar-dark navbar-expand-md navigation-clean-button">
+    {
+        <nav class="navbar navbar-dark navbar-expand-md navigation-clean-button">
             <div class="container">
                 <div class="collapse navbar-collapse" id="navcol-1">
                     <ul class="navbar-nav mx-auto">
@@ -66,6 +67,24 @@
                 </div>
             </div>
         </nav>
+    }
+    if (User.IsInRole(UniversitySystem.Utility.Helper.Student))
+    {
+        <nav class="navbar navbar-dark navbar-expand-md navigation-clean-button">
+            <div class="container">
+                <div class="collapse navbar-collapse" id="navcol-1">
+                    <ul class="navbar-nav mx-auto">
+                        <li class="nav-item dropdown">
+                            <a data-bs-toggle="dropdown" class="dropdown-toggle nav-link" href="#">Courses</a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" asp-action="MyCourses" asp-controller="Student">My Courses</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
     }
 }
 else

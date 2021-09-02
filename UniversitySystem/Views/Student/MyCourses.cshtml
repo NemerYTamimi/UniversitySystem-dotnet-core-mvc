@@ -1,0 +1,70 @@
+﻿@model UniversitySystem.Models.EnrollCourse
+
+<partial name="_PortalPartial" />
+
+<div class="row text-white">
+    <div>
+        <input hidden asp-for="RegistrationNo" name="StudentRegNo" />
+        <select name="semesterId" id="semesterId" class="form-control col-2 mt-3">
+            <option value="" class=" text-white">Select Semester</option>
+            @foreach (Semester semester in ViewBag.Semesters)
+            {
+                <option value="@semester.Id" class=" text-white">@semester.Name</option>
+            }
+        </select><label id="ErrorMessage" style="color: red;"></label>
+    </div>
+    <table class="table text-white">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Course.CourseName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Course.CourseCode)
+                </th>
+            </tr>
+        </thead>
+        <tbody id="contentTable">
+        </tbody>
+    </table>
+
+</div>
+
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script>
+    $(document).ready(function () {
+
+        $("#semesterId").change(function () {
+
+            $("#Message").text("");
+
+            var semesterId = $("#semesterId").val();
+            var data = { SemesterId: semesterId, StudentRegNo: "@ViewBag.StudentRegNo" };
+
+            $("#contentTable").empty();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("StudentCourses", "Student")',
+                data: { jsonInput: JSON.stringify(data) },
+                dataType: "json",
+                success: function (data) {
+                    // alert("Success");
+                    $.each(data, function (key, value) {
+                        // alert(value.id + " " + value.courseCode);
+                        $("#contentTable").append('<tr><td>' + value.course.courseName + '</td ><td>' + value.course.courseCode + '</td></tr>');
+                    });
+                }
+            });
+        });
+    });
+
+
+    function ResetErrorLabel() {
+        $("#ErrorMessage").text("");
+    }
+
+    </script>
+}

@@ -17,7 +17,7 @@ namespace UniversitySystem.Models
 
         [Required]
         [EmailAddress(ErrorMessage = "Email format is Incorrect.")]
-        [Remote("IsEmailExists", "Student", ErrorMessage = "Email already exists!", AdditionalFields = "Id")]
+        [Remote("IsEmailExists", "Teacher", ErrorMessage = "Email already exists!", AdditionalFields = "Id")]
         public string Email { set; get; }
 
         [Required(ErrorMessage = "The Field is required.")]

@@ -7,16 +7,22 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using UniversitySystem.Models.ViewModels;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using UniversitySystem.Utility;
 
 namespace UniversitySystem.Controllers
 {
     public class TeacherController : Controller
     {
         private readonly ApplicationDbContext _db;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public TeacherController(ApplicationDbContext db)
+
+        public TeacherController(ApplicationDbContext db, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
             _db = db;
+            _signInManager = signInManager;
+            _userManager = userManager;
         }
 
         // GET: /Teacher/
@@ -27,7 +33,7 @@ namespace UniversitySystem.Controllers
                 var teachers =   _db.Teachers.Include(s => s.Department).Include(t => t.Designation).Select(teacher => new TeacherVM()
                 {
                     Id = teacher.Id,
-                    Email = teacher.TeacherEmail,
+                    Email = teacher.Email,
                     DesignationName = teacher.Designation.Name,
                     Name = teacher.Name
                 });
@@ -79,9 +85,12 @@ namespace UniversitySystem.Controllers
                 if (ModelState.IsValid)
                 {
                     _db.Teachers.Add(teacher);
-                    await _db.SaveChangesAsync();
-                    ViewBag.Message = "Teacher Saved Successfully";
-                    // return RedirectToAction("Index");
+                    if(await CreateAccount(teacher.Email, teacher.Name, Helper.Teacher))
+                    {
+                        await _db.SaveChangesAsync();
+                        ViewBag.Message = "Teacher Saved Successfully";
+                        return RedirectToAction("Index");
+                    }
                 }
                 ViewBag.DepartmentId = new SelectList(_db.Departments, "Id", "DeptCode", teacher.DepartmentId);
                 ViewBag.DesignationId = new SelectList(_db.Designations, "Id", "Name", teacher.DesignationId);
@@ -89,11 +98,11 @@ namespace UniversitySystem.Controllers
             }
             return RedirectToAction("Index", "Portal");
         }
-        public ActionResult IsEmailExists(string teacherEmail, int  Id)
+        public ActionResult IsEmailExists(string email, int  Id)
         {
-            if (teacherEmail != null)
+            if (email != null)
             {
-                return Json(!_db.Teachers.Any(m => m.TeacherEmail == teacherEmail && m.Id != Id));
+                return Json(!_db.Teachers.Any(m => m.Email == email && m.Id != Id) && !_db.Students.Any(m => m.Email == email && m.Id != Id));
             }
             return BadRequest();
         }
@@ -173,6 +182,24 @@ namespace UniversitySystem.Controllers
                 return RedirectToAction("Index");
             }
             return RedirectToAction("Index", "Portal");
+        }
+
+        private async Task<bool> CreateAccount(string email, string name, string role)
+        {
+            var user = new ApplicationUser()
+            {
+                Name = name,
+                Email = email,
+                UserName = email
+            };
+            var result = await _userManager.CreateAsync(user, "ChangeMe123$");
+            if (result.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(user, role);
+                await _signInManager.SignInAsync(user, isPersistent: false);
+                return true;
+            }
+            return false;
         }
 
         //Finalizer
