@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using UniversitySystem.Models;
-using UniversitySystem.Models.ViewModels;
 using UniversitySystem.Services;
 
 namespace UniversitySystem.Controllers
@@ -88,7 +85,7 @@ namespace UniversitySystem.Controllers
                             }
                             else
                             {
-                                 ViewData["msg"] = "The student exceeds number of enrolled courses in the same semester";
+                                ViewData["msg"] = "The student exceeds number of enrolled courses in the same semester";
                             }
                         }
                         else

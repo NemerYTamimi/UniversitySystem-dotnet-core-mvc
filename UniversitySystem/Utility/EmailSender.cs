@@ -2,9 +2,6 @@
 using Mailjet.Client.Resources;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace UniversitySystem.Utility
@@ -21,7 +18,7 @@ namespace UniversitySystem.Utility
             {
                 Resource = Send.Resource,
             }
-           .Property(Send.FromEmail, "admin@university.edu")
+           .Property(Send.FromEmail, "pehiy99128@enpaypal.com")
            .Property(Send.FromName, "University System")
            .Property(Send.Subject, subject)
            .Property(Send.HtmlPart, htmlMessage)

@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using UniversitySystem.Models;
 using UniversitySystem.Models.ViewModels;
 
@@ -60,8 +59,8 @@ namespace UniversitySystem.Controllers
         }
 
         // POST: ClassRoomAllocations/Create
- 
- 
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,DepartmentId,CourseId,RoomId,DayId,StartTime,EndTime,RoomStatus")] ClassRoomAllocation classRoomAllocation)
@@ -100,8 +99,8 @@ namespace UniversitySystem.Controllers
         }
 
         // POST: ClassRoomAllocations/Edit/5
- 
- 
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,DepartmentId,CourseId,RoomId,DayId,StartTime,EndTime,RoomStatus")] ClassRoomAllocation classRoomAllocation)
@@ -181,7 +180,7 @@ namespace UniversitySystem.Controllers
 
         public IActionResult GetClassScheduleInfo(string jsonInput = "")
         {
-            int deptId= JsonConvert.DeserializeObject<int>(jsonInput);
+            int deptId = JsonConvert.DeserializeObject<int>(jsonInput);
             var courses = _context.Courses.Where(m => m.DepartmentId == deptId).ToList();
             return Json(courses);
         }
@@ -190,7 +189,7 @@ namespace UniversitySystem.Controllers
 
         public IActionResult SaveRoomSchedule(string jsonInput = "")
         {
-            if(jsonInput != null)
+            if (jsonInput != null)
             {
                 ClassRoomAllocation classRoomAllocation = JsonConvert.DeserializeObject<ClassRoomAllocation>(jsonInput);
                 var course = _context.Courses.Include(m => m.Semester).First(m => m.Id == classRoomAllocation.CourseId);
@@ -245,7 +244,7 @@ namespace UniversitySystem.Controllers
                     var courses = _context.Courses.Where(m => m.DepartmentId == department.Id).ToList();
                     return /*Ok();*/ Ok(courses);
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     return BadRequest(e.Message);
                 }

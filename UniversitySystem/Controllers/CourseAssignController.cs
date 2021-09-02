@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using System;
+using System.Linq;
 using UniversitySystem.Models;
 using UniversitySystem.Models.ViewModels;
 
@@ -41,7 +38,7 @@ namespace UniversitySystem.Controllers
 
         [HttpPost]
         [Produces("application/json")]
-        public IActionResult GetTeacherByDeptId(string jsonInput ="")
+        public IActionResult GetTeacherByDeptId(string jsonInput = "")
         {
             IdVM department = JsonConvert.DeserializeObject<IdVM>(jsonInput);
             var teachers = _db.Teachers.Where(m => m.DepartmentId == department.Id).ToList();

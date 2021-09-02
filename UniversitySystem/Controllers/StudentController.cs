@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using UniversitySystem.Models;
 using UniversitySystem.Models.ViewModels;
 using UniversitySystem.Services;
@@ -17,16 +17,21 @@ namespace UniversitySystem.Controllers
     public class StudentController : Controller
     {
         private readonly ApplicationDbContext _db;
+        private readonly IEmailSender _emailSender;
+        private readonly string defaultPassword = "ChangeMe123!";
         private readonly IStudentService _studentService;
         UserManager<ApplicationUser> _userManager;
         SignInManager<ApplicationUser> _signInManager;
 
-        public StudentController(ApplicationDbContext db, IStudentService studentService, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager)
+        public StudentController(ApplicationDbContext db, IStudentService studentService,
+            SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager
+            , IEmailSender emailSender)
         {
             _db = db;
             _studentService = studentService;
             _userManager = userManager;
             _signInManager = signInManager;
+            _emailSender = emailSender;
         }
         // GET: /Student/
         public ActionResult Index()
@@ -106,6 +111,10 @@ namespace UniversitySystem.Controllers
                     {
                         await _db.Finanials.AddAsync(finanial);
                         await _db.SaveChangesAsync();
+                        await _emailSender.SendEmailAsync(student.Email, "Welcome To our university",
+                            $"Your username is {student.Email} and password is {defaultPassword} " +
+                            $"now you can use it to signin to our university portal");
+
                         ViewBag.Message = "Student Registered Successfully";
                     }
                 }
@@ -124,7 +133,7 @@ namespace UniversitySystem.Controllers
                 Email = email,
                 UserName = email
             };
-            var result = await _userManager.CreateAsync(user, "ChangeMe123$");
+            var result = await _userManager.CreateAsync(user, defaultPassword);
             if (result.Succeeded)
             {
                 await _userManager.AddToRoleAsync(user, role);

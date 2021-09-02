@@ -1,12 +1,11 @@
-﻿using UniversitySystem.Models;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using UniversitySystem.Models.ViewModels;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
+using UniversitySystem.Models;
+using UniversitySystem.Models.ViewModels;
 using UniversitySystem.Utility;
 
 namespace UniversitySystem.Controllers
@@ -30,7 +29,7 @@ namespace UniversitySystem.Controllers
         {
             if (User.IsInRole(Utility.Helper.Admin))
             {
-                var teachers =   _db.Teachers.Include(s => s.Department).Include(t => t.Designation).Select(teacher => new TeacherVM()
+                var teachers = _db.Teachers.Include(s => s.Department).Include(t => t.Designation).Select(teacher => new TeacherVM()
                 {
                     Id = teacher.Id,
                     Email = teacher.Email,
@@ -85,7 +84,7 @@ namespace UniversitySystem.Controllers
                 if (ModelState.IsValid)
                 {
                     _db.Teachers.Add(teacher);
-                    if(await CreateAccount(teacher.Email, teacher.Name, Helper.Teacher))
+                    if (await CreateAccount(teacher.Email, teacher.Name, Helper.Teacher))
                     {
                         await _db.SaveChangesAsync();
                         ViewBag.Message = "Teacher Saved Successfully";
@@ -98,7 +97,7 @@ namespace UniversitySystem.Controllers
             }
             return RedirectToAction("Index", "Portal");
         }
-        public ActionResult IsEmailExists(string email, int  Id)
+        public ActionResult IsEmailExists(string email, int Id)
         {
             if (email != null)
             {
